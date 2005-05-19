@@ -1,7 +1,7 @@
 Summary: Security module for the Apache HTTP Server
 Name: mod_security 
 Version: 1.8.7
-Release: 1%{?dist}
+Release: 2%{?dist}
 License: GPL
 URL: http://www.modsecurity.org/
 Group: System Environment/Daemons
@@ -27,7 +27,7 @@ umbrella - shielding web applications from attacks.
 rm -rf %{buildroot}
 mkdir -p %{buildroot}%{_libdir}/httpd/modules/
 mkdir -p %{buildroot}/%{_sysconfdir}/httpd/conf.d/
-install -s -p apache2/.libs/mod_security.so %{buildroot}/%{_libdir}/httpd/modules/
+install -p apache2/.libs/mod_security.so %{buildroot}/%{_libdir}/httpd/modules/
 install -m644 %{SOURCE1} %{buildroot}/%{_sysconfdir}/httpd/conf.d/
 
 %clean
@@ -40,5 +40,8 @@ rm -rf %{buildroot}
 %config(noreplace) /etc/httpd/conf.d/mod_security.conf
 
 %changelog
+* Thu May 19 2005 Michael Fleming <mfleming+rpm@enlartenment.com> 1.8.7-2
+- Don't strip the module (so we can get a useful debuginfo package)
+
 * Thu May 19 2005 Michael Fleming <mfleming+rpm@enlartenment.com> 1.8.7-1
 - Initial spin for Extras
