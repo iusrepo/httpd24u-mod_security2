@@ -8,8 +8,7 @@ Group: System Environment/Daemons
 Source: http://www.modsecurity.org/download/modsecurity-%{version}.tar.gz
 Source1: mod_security.conf
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-Requires: httpd  httpd-mmn = %([ -a %{_includedir}/httpd/.mmn ] && cat
-%{_includedir}/httpd/.mmn || echo missing)
+Requires: httpd  httpd-mmn = %([ -a %{_includedir}/httpd/.mmn ] && cat %{_includedir}/httpd/.mmn || echo missing)
 BuildRequires: httpd-devel
 
 %description
@@ -43,7 +42,7 @@ rm -rf %{buildroot}
 %changelog
 * Sat Jul 9 2005 Michael Fleming <mfleming+rpm@enlartenment.com> 1.8.7-4
 - Add Requires: httpd-mmn to get the appropriate "module magic" version
-  (thanks Ville Skytt√§)
+  (thanks Ville Skytt‰)
 - Disabled an overly-agressive rule or two..
 
 * Sat Jul 9 2005 Michael Fleming <mfleming+rpm@enlartenment.com> 1.8.7-3
