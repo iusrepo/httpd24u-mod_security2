@@ -43,7 +43,7 @@ rm -rf %{buildroot}
 %changelog
 * Sat Jul 9 2005 Michael Fleming <mfleming+rpm@enlartenment.com> 1.8.7-4
 - Add Requires: httpd-mmn to get the appropriate "module magic" version
-  (thanks Ville Skytt‰)
+  (thanks Ville Skytt√§)
 - Disabled an overly-agressive rule or two..
 
 * Sat Jul 9 2005 Michael Fleming <mfleming+rpm@enlartenment.com> 1.8.7-3
