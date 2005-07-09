@@ -1,20 +1,20 @@
 Summary: Security module for the Apache HTTP Server
 Name: mod_security 
 Version: 1.8.7
-Release: 2%{?dist}
+Release: 3%{?dist}
 License: GPL
 URL: http://www.modsecurity.org/
 Group: System Environment/Daemons
-Source: http://www.modsecurity.org/download/modsecurity-1.8.7.tar.gz
+Source: http://www.modsecurity.org/download/modsecurity-%{version}.tar.gz
 Source1: mod_security.conf
-BuildRoot: %{_tmppath}/%{name}-root/
-Requires: httpd >= 2.0.38
-BuildRequires: httpd-devel >= 2.0.38
+BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
+Requires: httpd
+BuildRequires: httpd-devel
 
 %description
-ModSecurity is an open source intrusion detection and prevention engine for web
-applications. It operates embedded into the web server, acting as a powerful
-umbrella - shielding web applications from attacks.
+ModSecurity is an open source intrusion detection and prevention engine
+for web applications. It operates embedded into the web server, acting
+as a powerful umbrella - shielding web applications from attacks.
 
 %prep
 
@@ -40,6 +40,10 @@ rm -rf %{buildroot}
 %config(noreplace) /etc/httpd/conf.d/mod_security.conf
 
 %changelog
+* Sat Jul 9 2005 Michael Fleming <mfleming+rpm@enlartenment.com> 1.8.7-3
+- Correct Buildroot
+- Some sensible and safe rules for common apps in mod_security.conf
+
 * Thu May 19 2005 Michael Fleming <mfleming+rpm@enlartenment.com> 1.8.7-2
 - Don't strip the module (so we can get a useful debuginfo package)
 
