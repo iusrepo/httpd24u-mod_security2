@@ -1,11 +1,11 @@
 Summary: Security module for the Apache HTTP Server
 Name: mod_security 
-Version: 1.8.7
-Release: 4%{?dist}
+Version: 1.9
+Release: 1%{?dist}
 License: GPL
 URL: http://www.modsecurity.org/
 Group: System Environment/Daemons
-Source: http://www.modsecurity.org/download/modsecurity-%{version}.tar.gz
+Source: http://www.modsecurity.org/download/modsecurity-apache-%{version}.tar.gz
 Source1: mod_security.conf
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Requires: httpd  httpd-mmn = %([ -a %{_includedir}/httpd/.mmn ] && cat %{_includedir}/httpd/.mmn || echo missing)
@@ -18,7 +18,7 @@ as a powerful umbrella - shielding web applications from attacks.
 
 %prep
 
-%setup -q -n modsecurity-%{version}
+%setup -q -n modsecurity-apache-%{version}
 
 %build
 /usr/sbin/apxs -Wc,"%{optflags}" -c apache2/mod_security.c
@@ -35,14 +35,17 @@ rm -rf %{buildroot}
 
 %files
 %defattr (-,root,root)
-%doc CHANGES LICENSE INSTALL README httpd* *.pdf util
+%doc CHANGES LICENSE INSTALL README httpd* util doc
 %{_libdir}/httpd/modules/mod_security.so
 %config(noreplace) /etc/httpd/conf.d/mod_security.conf
 
 %changelog
+* Wed Nov 9 2005 Michael Fleming <mfleming+rpm@enlartenment.com> 1.9-1
+- New stable upstream release 1.9
+
 * Sat Jul 9 2005 Michael Fleming <mfleming+rpm@enlartenment.com> 1.8.7-4
 - Add Requires: httpd-mmn to get the appropriate "module magic" version
-  (thanks Ville Skyttä)
+  (thanks Ville Skytta)
 - Disabled an overly-agressive rule or two..
 
 * Sat Jul 9 2005 Michael Fleming <mfleming+rpm@enlartenment.com> 1.8.7-3
