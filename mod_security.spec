@@ -1,11 +1,11 @@
 Summary: Security module for the Apache HTTP Server
 Name: mod_security 
-Version: 1.9.2
-Release: 3%{?dist}
+Version: 1.9.3
+Release: 1%{?dist}
 License: GPL
 URL: http://www.modsecurity.org/
 Group: System Environment/Daemons
-Source: http://www.modsecurity.org/download/modsecurity-apache-%{version}.tar.gz
+Source: http://www.modsecurity.org/download/modsecurity-apache_%{version}.tar.gz
 Source1: mod_security.conf
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Requires: httpd  httpd-mmn = %([ -a %{_includedir}/httpd/.mmn ] && cat %{_includedir}/httpd/.mmn || echo missing)
@@ -18,7 +18,7 @@ as a powerful umbrella - shielding web applications from attacks.
 
 %prep
 
-%setup -q -n modsecurity-apache-%{version}
+%setup -q -n modsecurity-apache_%{version}
 
 %build
 /usr/sbin/apxs -Wc,"%{optflags}" -c apache2/mod_security.c
@@ -37,9 +37,13 @@ rm -rf %{buildroot}
 %defattr (-,root,root)
 %doc CHANGES LICENSE INSTALL README httpd* util doc
 %{_libdir}/httpd/modules/mod_security.so
-%config(noreplace) /etc/httpd/conf.d/mod_security.conf
+%config(noreplace) %{_sysconfdir}/httpd/conf.d/mod_security.conf
 
 %changelog
+* Tue Apr 11 2006 Michael Fleming <mfleming+rpm@enlartenment.com> 1.9.3-1
+- New upstream release
+- Trivial spec tweaks
+
 * Wed Mar 1 2006 Michael Fleming <mfleming+rpm@enlartenment.com> 1.9.2-3
 - Bump for FC5
 
