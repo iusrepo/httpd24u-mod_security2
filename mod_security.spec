@@ -1,7 +1,7 @@
 Summary: Security module for the Apache HTTP Server
 Name: mod_security 
 Version: 1.9.4
-Release: 1%{?dist}
+Release: 2%{?dist}
 License: GPL
 URL: http://www.modsecurity.org/
 Group: System Environment/Daemons
@@ -40,6 +40,10 @@ rm -rf %{buildroot}
 %config(noreplace) %{_sysconfdir}/httpd/conf.d/mod_security.conf
 
 %changelog
+* Sun Sep 3 2006 Michael Fleming <mfleming+rpm@enlartenment.com> 1.9.4-2
+- Rebuild
+- Fix minor longstanding braino in included sample configuration (bz #203972)
+
 * Mon May 15 2006 Michael Fleming <mfleming+rpm@enlartenment.com> 1.9.4-1
 - New upstream release
 
