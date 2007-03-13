@@ -1,15 +1,16 @@
 Summary: Security module for the Apache HTTP Server
 Name: mod_security 
-Version: 1.9.4
-Release: 2%{?dist}
+Version: 2.1.0
+Release: 1%{?dist}
 License: GPL
 URL: http://www.modsecurity.org/
 Group: System Environment/Daemons
 Source: http://www.modsecurity.org/download/modsecurity-apache_%{version}.tar.gz
 Source1: mod_security.conf
+Source2: modsecurity_localrules.conf
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-Requires: httpd  httpd-mmn = %([ -a %{_includedir}/httpd/.mmn ] && cat %{_includedir}/httpd/.mmn || echo missing)
-BuildRequires: httpd-devel
+Requires: libxml2 pcre httpd httpd-mmn = %([ -a %{_includedir}/httpd/.mmn ] && cat %{_includedir}/httpd/.mmn || echo missing)
+BuildRequires: httpd-devel libxml2-devel pcre-devel
 
 %description
 ModSecurity is an open source intrusion detection and prevention engine
@@ -18,28 +19,41 @@ as a powerful umbrella - shielding web applications from attacks.
 
 %prep
 
-%setup -q -n modsecurity-apache_%{version}
+%setup -n modsecurity-apache_%{version}
 
 %build
-/usr/sbin/apxs -Wc,"%{optflags}" -c apache2/mod_security.c
+make -C apache2 CFLAGS="%{optflags}" top_dir="%{_libdir}/httpd"
 
 %install
 rm -rf %{buildroot}
-mkdir -p %{buildroot}%{_libdir}/httpd/modules/
-mkdir -p %{buildroot}/%{_sysconfdir}/httpd/conf.d/
-install -p apache2/.libs/mod_security.so %{buildroot}/%{_libdir}/httpd/modules/
-install -m644 %{SOURCE1} %{buildroot}/%{_sysconfdir}/httpd/conf.d/
+install -D -m644 apache2/.libs/mod_security2.so %{buildroot}/%{_libdir}/httpd/modules/mod_security2.so
+install -D -m644 %{SOURCE1} %{buildroot}/%{_sysconfdir}/httpd/conf.d/mod_security.conf
+install -d %{buildroot}/%{_sysconfdir}/httpd/modsecurity.d/blocking/
+cp -r rules/*.conf %{buildroot}/%{_sysconfdir}/httpd/modsecurity.d/
+cp -r rules/blocking/*.conf %{buildroot}/%{_sysconfdir}/httpd/modsecurity.d/blocking/
+install -D -m644 %{SOURCE2} %{buildroot}/%{_sysconfdir}/httpd/modsecurity.d/modsecurity_localrules.conf
 
 %clean
 rm -rf %{buildroot}
 
 %files
 %defattr (-,root,root)
-%doc CHANGES LICENSE INSTALL README httpd* util doc
-%{_libdir}/httpd/modules/mod_security.so
-%config(noreplace) %{_sysconfdir}/httpd/conf.d/mod_security.conf
+%doc CHANGES LICENSE README.* modsecurity* doc
+%{_libdir}/httpd/modules/mod_security2.so
+%config %{_sysconfdir}/httpd/conf.d/mod_security.conf
+%dir %{_sysconfdir}/httpd/modsecurity.d
+%dir %{_sysconfdir}/httpd/modsecurity.d/blocking
+%config %{_sysconfdir}/httpd/modsecurity.d/*.conf
+%config %{_sysconfdir}/httpd/modsecurity.d/blocking/*.conf
+
 
 %changelog
+* Tue Mar 13 2007 Michael Fleming <mfleming+rpm@enlartenment.com> 2.1.0-1
+- New major release - 2.1.0
+- Fix CVE-2007-1359 with a local rule courtesy of Ivan Ristic
+- Addition of core ruleset
+- (Build)Requires libxml2 and pcre added.
+
 * Sun Sep 3 2006 Michael Fleming <mfleming+rpm@enlartenment.com> 1.9.4-2
 - Rebuild
 - Fix minor longstanding braino in included sample configuration (bz #203972)

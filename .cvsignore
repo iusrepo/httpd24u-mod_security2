@@ -1,1 +1,3 @@
-modsecurity-apache_1.9.4.tar.gz
+mod_security.conf
+modsecurity-apache_2.1.0.tar.gz
+modsecurity_localrules.conf
