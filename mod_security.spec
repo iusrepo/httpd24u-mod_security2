@@ -1,7 +1,7 @@
 Summary: Security module for the Apache HTTP Server
 Name: mod_security 
 Version: 2.1.0
-Release: 1%{?dist}
+Release: 2%{?dist}
 License: GPL
 URL: http://www.modsecurity.org/
 Group: System Environment/Daemons
@@ -26,7 +26,7 @@ make -C apache2 CFLAGS="%{optflags}" top_dir="%{_libdir}/httpd"
 
 %install
 rm -rf %{buildroot}
-install -D -m644 apache2/.libs/mod_security2.so %{buildroot}/%{_libdir}/httpd/modules/mod_security2.so
+install -D -m755 apache2/.libs/mod_security2.so %{buildroot}/%{_libdir}/httpd/modules/mod_security2.so
 install -D -m644 %{SOURCE1} %{buildroot}/%{_sysconfdir}/httpd/conf.d/mod_security.conf
 install -d %{buildroot}/%{_sysconfdir}/httpd/modsecurity.d/blocking/
 cp -r rules/*.conf %{buildroot}/%{_sysconfdir}/httpd/modsecurity.d/
@@ -48,6 +48,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon Mar 26 2007 Michael Fleming <mfleming+rpm@enlartenment.com> 2.1.0-2
+- Fix DSO permissions (bz#233733)
+
 * Tue Mar 13 2007 Michael Fleming <mfleming+rpm@enlartenment.com> 2.1.0-1
 - New major release - 2.1.0
 - Fix CVE-2007-1359 with a local rule courtesy of Ivan Ristic
