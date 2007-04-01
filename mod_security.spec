@@ -1,7 +1,7 @@
 Summary: Security module for the Apache HTTP Server
 Name: mod_security 
 Version: 2.1.0
-Release: 2%{?dist}
+Release: 3%{?dist}
 License: GPL
 URL: http://www.modsecurity.org/
 Group: System Environment/Daemons
@@ -23,6 +23,7 @@ as a powerful umbrella - shielding web applications from attacks.
 
 %build
 make -C apache2 CFLAGS="%{optflags}" top_dir="%{_libdir}/httpd"
+perl -pi.orig -e 's|LIBDIR|%{_libdir}|;' %{SOURCE1}
 
 %install
 rm -rf %{buildroot}
@@ -48,6 +49,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Apr 1 2007 Michael Fleming <mfleming+rpm@enlartenment.com> 2.1.0-3
+- Automagically configure correct library path for libxml2 library.
+- Add LoadModule for mod_unique_id as the logging wants this at runtime
+
 * Mon Mar 26 2007 Michael Fleming <mfleming+rpm@enlartenment.com> 2.1.0-2
 - Fix DSO permissions (bz#233733)
 
