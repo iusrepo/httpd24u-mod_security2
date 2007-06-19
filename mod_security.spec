@@ -1,7 +1,7 @@
 Summary: Security module for the Apache HTTP Server
 Name: mod_security 
-Version: 2.1.0
-Release: 3%{?dist}
+Version: 2.1.1
+Release: 1%{?dist}
 License: GPL
 URL: http://www.modsecurity.org/
 Group: System Environment/Daemons
@@ -41,14 +41,20 @@ rm -rf %{buildroot}
 %defattr (-,root,root)
 %doc CHANGES LICENSE README.* modsecurity* doc
 %{_libdir}/httpd/modules/mod_security2.so
-%config %{_sysconfdir}/httpd/conf.d/mod_security.conf
+%config(noreplace) %{_sysconfdir}/httpd/conf.d/mod_security.conf
 %dir %{_sysconfdir}/httpd/modsecurity.d
 %dir %{_sysconfdir}/httpd/modsecurity.d/blocking
-%config %{_sysconfdir}/httpd/modsecurity.d/*.conf
-%config %{_sysconfdir}/httpd/modsecurity.d/blocking/*.conf
+%config(noreplace) %{_sysconfdir}/httpd/modsecurity.d/*.conf
+%config(noreplace) %{_sysconfdir}/httpd/modsecurity.d/blocking/*.conf
 
 
 %changelog
+* Tue Jun 19 2007 Michael Fleming <mfleming+rpm@enlartenment.com> 2.1.1-1
+- New upstream release
+- Drop ASCIIZ rule (fixed upstream)
+- Re-enable protocol violation/anomalies rules now that REQUEST_FILENAME
+  is fixed upstream.
+
 * Sun Apr 1 2007 Michael Fleming <mfleming+rpm@enlartenment.com> 2.1.0-3
 - Automagically configure correct library path for libxml2 library.
 - Add LoadModule for mod_unique_id as the logging wants this at runtime
