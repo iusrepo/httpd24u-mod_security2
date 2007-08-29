@@ -1,7 +1,7 @@
 Summary: Security module for the Apache HTTP Server
 Name: mod_security 
 Version: 2.1.1
-Release: 1%{?dist}
+Release: 2%{?dist}
 License: GPL
 URL: http://www.modsecurity.org/
 Group: System Environment/Daemons
@@ -49,6 +49,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Wed Aug 29 2007 Fedora Release Engineering <rel-eng at fedoraproject dot org> - 2.1.1-2
+- Rebuild for selinux ppc32 issue.
+
 * Tue Jun 19 2007 Michael Fleming <mfleming+rpm@enlartenment.com> 2.1.1-1
 - New upstream release
 - Drop ASCIIZ rule (fixed upstream)
