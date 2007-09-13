@@ -1,8 +1,8 @@
 Summary: Security module for the Apache HTTP Server
 Name: mod_security 
-Version: 2.1.1
-Release: 3%{?dist}
-License: GPL
+Version: 2.1.3
+Release: 1%{?dist}
+License: GPLv2
 URL: http://www.modsecurity.org/
 Group: System Environment/Daemons
 Source: http://www.modsecurity.org/download/modsecurity-apache_%{version}.tar.gz
@@ -49,6 +49,10 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Thu Sep  13 2007 Michael Fleming <mfleming+rpm@enlartenment.com> 2.1.3-1
+- Update to 2.1.3
+- Update License tag per guidelines.
+
 * Mon Sep  3 2007 Joe Orton <jorton@redhat.com> 2.1.1-3
 - rebuild for fixed 32-bit APR (#254241)
 
