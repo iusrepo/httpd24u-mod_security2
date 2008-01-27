@@ -1,7 +1,7 @@
 Summary: Security module for the Apache HTTP Server
 Name: mod_security 
 Version: 2.1.5
-Release: 1%{?dist}
+Release: 2%{?dist}
 License: GPLv2
 URL: http://www.modsecurity.org/
 Group: System Environment/Daemons
@@ -29,9 +29,9 @@ perl -pi.orig -e 's|LIBDIR|%{_libdir}|;' %{SOURCE1}
 rm -rf %{buildroot}
 install -D -m755 apache2/.libs/mod_security2.so %{buildroot}/%{_libdir}/httpd/modules/mod_security2.so
 install -D -m644 %{SOURCE1} %{buildroot}/%{_sysconfdir}/httpd/conf.d/mod_security.conf
-install -d %{buildroot}/%{_sysconfdir}/httpd/modsecurity.d/blocking/
+install -d %{buildroot}/%{_sysconfdir}/httpd/modsecurity.d/optional_rules/
 cp -r rules/*.conf %{buildroot}/%{_sysconfdir}/httpd/modsecurity.d/
-cp -r rules/blocking/*.conf %{buildroot}/%{_sysconfdir}/httpd/modsecurity.d/blocking/
+cp -r rules/optional_rules/*.conf %{buildroot}/%{_sysconfdir}/httpd/modsecurity.d/optional_rules/
 install -D -m644 %{SOURCE2} %{buildroot}/%{_sysconfdir}/httpd/modsecurity.d/modsecurity_localrules.conf
 
 %clean
@@ -43,14 +43,16 @@ rm -rf %{buildroot}
 %{_libdir}/httpd/modules/mod_security2.so
 %config(noreplace) %{_sysconfdir}/httpd/conf.d/mod_security.conf
 %dir %{_sysconfdir}/httpd/modsecurity.d
-%dir %{_sysconfdir}/httpd/modsecurity.d/blocking
+%dir %{_sysconfdir}/httpd/modsecurity.d/optional_rules
 %config(noreplace) %{_sysconfdir}/httpd/modsecurity.d/*.conf
-%config(noreplace) %{_sysconfdir}/httpd/modsecurity.d/blocking/*.conf
+%config(noreplace) %{_sysconfdir}/httpd/modsecurity.d/optional_rules/*.conf
 
 
 %changelog
-* Sat Jan 27 2008 Michael Fleming <mfleming+rpm@enlartenment.com> 2.1.5-1
+* Sat Jan 27 2008 Michael Fleming <mfleming+rpm@enlartenment.com> 2.1.5-2
 - Update to 2.1.5 (bz#425986)
+- "blocking" -> "optional_rules" per tarball ;-)
+
 
 * Thu Sep  13 2007 Michael Fleming <mfleming+rpm@enlartenment.com> 2.1.3-1
 - Update to 2.1.3
