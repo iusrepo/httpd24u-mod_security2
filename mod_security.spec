@@ -1,7 +1,7 @@
 Summary: Security module for the Apache HTTP Server
 Name: mod_security 
-Version: 2.1.5
-Release: 3%{?dist}
+Version: 2.1.6
+Release: 1%{?dist}
 License: GPLv2
 URL: http://www.modsecurity.org/
 Group: System Environment/Daemons
@@ -49,6 +49,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sat Feb 23 2008 Michael Fleming <mfleming+rpm@enlartenment.com> 2.1.6-1
+- Update to upstream 2.1.6 (Extra features including SecUploadFileMode)
+
 * Tue Feb 19 2008 Fedora Release Engineering <rel-eng@fedoraproject.org> - 2.1.5-3
 - Autorebuild for GCC 4.3
 
