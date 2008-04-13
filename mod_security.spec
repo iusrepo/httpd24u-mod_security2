@@ -1,6 +1,6 @@
 Summary: Security module for the Apache HTTP Server
 Name: mod_security 
-Version: 2.1.6
+Version: 2.1.7
 Release: 1%{?dist}
 License: GPLv2
 URL: http://www.modsecurity.org/
@@ -49,6 +49,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Sun Apr 13 2008 Michael Fleming <mfleming+rpm@enlartenment.com> 2.1.7-1
+- Update to upstream 2.1.7
+
 * Sat Feb 23 2008 Michael Fleming <mfleming+rpm@enlartenment.com> 2.1.6-1
 - Update to upstream 2.1.6 (Extra features including SecUploadFileMode)
 
