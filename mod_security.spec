@@ -1,6 +1,6 @@
 Summary: Security module for the Apache HTTP Server
 Name: mod_security 
-Version: 2.1.7
+Version: 2.5.6
 Release: 1%{?dist}
 License: GPLv2
 URL: http://www.modsecurity.org/
@@ -9,8 +9,8 @@ Source: http://www.modsecurity.org/download/modsecurity-apache_%{version}.tar.gz
 Source1: mod_security.conf
 Source2: modsecurity_localrules.conf
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
-Requires: libxml2 pcre httpd httpd-mmn = %([ -a %{_includedir}/httpd/.mmn ] && cat %{_includedir}/httpd/.mmn || echo missing)
-BuildRequires: httpd-devel libxml2-devel pcre-devel
+Requires: httpd httpd-mmn = %([ -a %{_includedir}/httpd/.mmn ] && cat %{_includedir}/httpd/.mmn || echo missing)
+BuildRequires: httpd-devel libxml2-devel pcre-devel curl-devel lua-devel
 
 %description
 ModSecurity is an open source intrusion detection and prevention engine
@@ -22,8 +22,9 @@ as a powerful umbrella - shielding web applications from attacks.
 %setup -n modsecurity-apache_%{version}
 
 %build
-make -C apache2 CFLAGS="%{optflags}" top_dir="%{_libdir}/httpd"
-perl -pi.orig -e 's|LIBDIR|%{_libdir}|;' %{SOURCE1}
+cd apache2
+%configure
+make %{_smp_mflags}
 
 %install
 rm -rf %{buildroot}
@@ -39,7 +40,7 @@ rm -rf %{buildroot}
 
 %files
 %defattr (-,root,root)
-%doc CHANGES LICENSE README.* modsecurity* doc
+%doc CHANGES LICENSE README.* modsecurity* doc 
 %{_libdir}/httpd/modules/mod_security2.so
 %config(noreplace) %{_sysconfdir}/httpd/conf.d/mod_security.conf
 %dir %{_sysconfdir}/httpd/modsecurity.d
@@ -47,8 +48,13 @@ rm -rf %{buildroot}
 %config(noreplace) %{_sysconfdir}/httpd/modsecurity.d/*.conf
 %config(noreplace) %{_sysconfdir}/httpd/modsecurity.d/optional_rules/*.conf
 
-
 %changelog
+* Sat Aug 2 2008 Michael Fleming <mfleming+rpm@enlartenment.com> 2.5.6-1
+- Update to upstream 2.5.6
+- Remove references to mlogc, it no longer ships in the main tarball.
+- Link correctly vs. libxml2 and lua (bz# 445839)
+- Remove bogus LoadFile directives as they're no longer needed.
+
 * Sun Apr 13 2008 Michael Fleming <mfleming+rpm@enlartenment.com> 2.1.7-1
 - Update to upstream 2.1.7
 
