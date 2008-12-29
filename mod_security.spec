@@ -1,6 +1,6 @@
 Summary: Security module for the Apache HTTP Server
 Name: mod_security 
-Version: 2.5.6
+Version: 2.5.7
 Release: 1%{?dist}
 License: GPLv2
 URL: http://www.modsecurity.org/
@@ -25,6 +25,7 @@ as a powerful umbrella - shielding web applications from attacks.
 cd apache2
 %configure
 make %{_smp_mflags}
+make %{_smp_mflags} mlogc
 
 %install
 rm -rf %{buildroot}
@@ -34,14 +35,18 @@ install -d %{buildroot}/%{_sysconfdir}/httpd/modsecurity.d/optional_rules/
 cp -r rules/*.conf %{buildroot}/%{_sysconfdir}/httpd/modsecurity.d/
 cp -r rules/optional_rules/*.conf %{buildroot}/%{_sysconfdir}/httpd/modsecurity.d/optional_rules/
 install -D -m644 %{SOURCE2} %{buildroot}/%{_sysconfdir}/httpd/modsecurity.d/modsecurity_localrules.conf
+install -Dp tools/mlogc %{buildroot}/%{_bindir}/mlogc
+install -D -m644 apache2/mlogc-src/mlogc-default.conf %{buildroot}/%{_sysconfdir}/mlogc.conf
 
 %clean
 rm -rf %{buildroot}
 
 %files
 %defattr (-,root,root)
-%doc CHANGES LICENSE README.* modsecurity* doc 
+%doc CHANGES LICENSE README.* modsecurity* doc MODSECURITY_LICENSING_EXCEPTION
 %{_libdir}/httpd/modules/mod_security2.so
+%{_bindir}/mlogc
+%config(noreplace) %{_sysconfdir}/mlogc.conf
 %config(noreplace) %{_sysconfdir}/httpd/conf.d/mod_security.conf
 %dir %{_sysconfdir}/httpd/modsecurity.d
 %dir %{_sysconfdir}/httpd/modsecurity.d/optional_rules
@@ -49,6 +54,10 @@ rm -rf %{buildroot}
 %config(noreplace) %{_sysconfdir}/httpd/modsecurity.d/optional_rules/*.conf
 
 %changelog
+* Mon Dec 29 2008 Michael Fleming <mfleming+rpm@enlartenment.com> 2.5.7-1
+- Update to upstream 2.5.7
+- Reinstate mlogc
+
 * Sat Aug 2 2008 Michael Fleming <mfleming+rpm@enlartenment.com> 2.5.6-1
 - Update to upstream 2.5.6
 - Remove references to mlogc, it no longer ships in the main tarball.
