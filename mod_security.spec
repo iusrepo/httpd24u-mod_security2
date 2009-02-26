@@ -1,7 +1,7 @@
 Summary: Security module for the Apache HTTP Server
 Name: mod_security 
 Version: 2.5.7
-Release: 1%{?dist}
+Release: 2%{?dist}
 License: GPLv2
 URL: http://www.modsecurity.org/
 Group: System Environment/Daemons
@@ -54,6 +54,9 @@ rm -rf %{buildroot}
 %config(noreplace) %{_sysconfdir}/httpd/modsecurity.d/optional_rules/*.conf
 
 %changelog
+* Wed Feb 25 2009 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.5.7-2
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_11_Mass_Rebuild
+
 * Mon Dec 29 2008 Michael Fleming <mfleming+rpm@enlartenment.com> 2.5.7-1
 - Update to upstream 2.5.7
 - Reinstate mlogc
