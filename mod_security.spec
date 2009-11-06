@@ -1,7 +1,7 @@
 Summary: Security module for the Apache HTTP Server
 Name: mod_security 
 Version: 2.5.10
-Release: 1%{?dist}
+Release: 2%{?dist}
 License: GPLv2
 URL: http://www.modsecurity.org/
 Group: System Environment/Daemons
@@ -31,9 +31,8 @@ make %{_smp_mflags} mlogc
 rm -rf %{buildroot}
 install -D -m755 apache2/.libs/mod_security2.so %{buildroot}/%{_libdir}/httpd/modules/mod_security2.so
 install -D -m644 %{SOURCE1} %{buildroot}/%{_sysconfdir}/httpd/conf.d/mod_security.conf
-install -d %{buildroot}/%{_sysconfdir}/httpd/modsecurity.d/optional_rules/
-cp -r rules/*.conf %{buildroot}/%{_sysconfdir}/httpd/modsecurity.d/
-cp -r rules/optional_rules/*.conf %{buildroot}/%{_sysconfdir}/httpd/modsecurity.d/optional_rules/
+install -d %{buildroot}/%{_sysconfdir}/httpd/modsecurity.d/
+cp -r rules/ %{buildroot}/%{_sysconfdir}/httpd/modsecurity.d/
 install -D -m644 %{SOURCE2} %{buildroot}/%{_sysconfdir}/httpd/modsecurity.d/modsecurity_localrules.conf
 install -Dp tools/mlogc %{buildroot}/%{_bindir}/mlogc
 install -D -m644 apache2/mlogc-src/mlogc-default.conf %{buildroot}/%{_sysconfdir}/mlogc.conf
@@ -50,10 +49,15 @@ rm -rf %{buildroot}
 %config(noreplace) %{_sysconfdir}/httpd/conf.d/mod_security.conf
 %dir %{_sysconfdir}/httpd/modsecurity.d
 %dir %{_sysconfdir}/httpd/modsecurity.d/optional_rules
+%dir %{_sysconfdir}/httpd/modsecurity.d/base_rules
 %config(noreplace) %{_sysconfdir}/httpd/modsecurity.d/*.conf
 %config(noreplace) %{_sysconfdir}/httpd/modsecurity.d/optional_rules/*.conf
+%config(noreplace) %{_sysconfdir}/httpd/modsecurity.d/base_rules/*.conf
 
 %changelog
+* Fri Nov 6 2009 Michael Fleming <mfleming+rpm@thatfleminggent.com> - 2.5.10-2
+- Fix rules and Apache configuration (bz#533124)
+
 * Thu Oct 8 2009 Michael Fleming <mfleming+rpm@thatfleminggent.com> - 2.5.10-1
 - Upgrade to 2.5.10 (with Core Rules v2)
 
