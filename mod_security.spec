@@ -32,7 +32,9 @@ rm -rf %{buildroot}
 install -D -m755 apache2/.libs/mod_security2.so %{buildroot}/%{_libdir}/httpd/modules/mod_security2.so
 install -D -m644 %{SOURCE1} %{buildroot}/%{_sysconfdir}/httpd/conf.d/mod_security.conf
 install -d %{buildroot}/%{_sysconfdir}/httpd/modsecurity.d/
-cp -r rules/ %{buildroot}/%{_sysconfdir}/httpd/modsecurity.d/
+install -D -m644 rules/*.conf %{buildroot}/%{_sysconfdir}/httpd/modsecurity.d/
+cp -R rules/base_rules %{buildroot}/%{_sysconfdir}/httpd/modsecurity.d/
+cp -R rules/optional_rules %{buildroot}/%{_sysconfdir}/httpd/modsecurity.d/
 install -D -m644 %{SOURCE2} %{buildroot}/%{_sysconfdir}/httpd/modsecurity.d/modsecurity_localrules.conf
 install -Dp tools/mlogc %{buildroot}/%{_bindir}/mlogc
 install -D -m644 apache2/mlogc-src/mlogc-default.conf %{buildroot}/%{_sysconfdir}/mlogc.conf
@@ -42,17 +44,15 @@ rm -rf %{buildroot}
 
 %files
 %defattr (-,root,root)
-%doc CHANGES LICENSE README.* modsecurity* doc MODSECURITY_LICENSING_EXCEPTION
+%doc rules/util CHANGES LICENSE README.* modsecurity* doc MODSECURITY_LICENSING_EXCEPTION
 %{_libdir}/httpd/modules/mod_security2.so
 %{_bindir}/mlogc
 %config(noreplace) %{_sysconfdir}/mlogc.conf
 %config(noreplace) %{_sysconfdir}/httpd/conf.d/mod_security.conf
 %dir %{_sysconfdir}/httpd/modsecurity.d
-%dir %{_sysconfdir}/httpd/modsecurity.d/optional_rules
-%dir %{_sysconfdir}/httpd/modsecurity.d/base_rules
+%{_sysconfdir}/httpd/modsecurity.d/optional_rules
+%{_sysconfdir}/httpd/modsecurity.d/base_rules
 %config(noreplace) %{_sysconfdir}/httpd/modsecurity.d/*.conf
-%config(noreplace) %{_sysconfdir}/httpd/modsecurity.d/optional_rules/*.conf
-%config(noreplace) %{_sysconfdir}/httpd/modsecurity.d/base_rules/*.conf
 
 %changelog
 * Fri Nov 6 2009 Michael Fleming <mfleming+rpm@thatfleminggent.com> - 2.5.10-2
