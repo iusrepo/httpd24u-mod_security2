@@ -1,7 +1,7 @@
 Summary: Security module for the Apache HTTP Server
 Name: mod_security 
 Version: 2.5.12
-Release: 1%{?dist}
+Release: 2%{?dist}
 License: GPLv2
 URL: http://www.modsecurity.org/
 Group: System Environment/Daemons
@@ -55,6 +55,9 @@ rm -rf %{buildroot}
 %config(noreplace) %{_sysconfdir}/httpd/modsecurity.d/*.conf
 
 %changelog
+* Thu Apr 29 2010 Michael Fleming <mfleming+rpm@thatfleminggent.com> - 2.5.12-2
+- Fix SecDatadir and minimal config per bz #569360
+
 * Sat Feb 13 2010 Michael Fleming <mfleming+rpm@thatfleminggent.com> - 2.5.12-1
 - Update to latest upstream release
 - SECURITY: Fix potential rules bypass and denial of service (bz#563576)
