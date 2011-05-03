@@ -1,12 +1,7 @@
 Summary: Security module for the Apache HTTP Server
 Name: mod_security 
-<<<<<<< HEAD
 Version: 2.5.13
 Release: 1%{?dist}
-=======
-Version: 2.5.12
-Release: 4%{?dist}
->>>>>>> d286070b04a52d2dd99a821b1144b5304e9aa163
 License: GPLv2
 URL: http://www.modsecurity.org/
 Group: System Environment/Daemons
@@ -60,13 +55,8 @@ rm -rf %{buildroot}
 %config(noreplace) %{_sysconfdir}/httpd/modsecurity.d/*.conf
 
 %changelog
-<<<<<<< HEAD
 * Wed May 3 2011 Michael Fleming <mfleming+rpm@thatfleminggent.com> - 2.5.13-1
 - Newer upstream version
-=======
-* Tue Feb 08 2011 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.5.12-4
-- Rebuilt for https://fedoraproject.org/wiki/Fedora_15_Mass_Rebuild
->>>>>>> d286070b04a52d2dd99a821b1144b5304e9aa163
 
 * Wed Jun 30 2010 Michael Fleming <mfleming+rpm@thatfleminggent.com> - 2.5.12-3
 - Fix log dirs and files ordering per bz#569360
