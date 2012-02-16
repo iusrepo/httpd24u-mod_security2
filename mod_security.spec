@@ -32,7 +32,8 @@ rm -rf %{buildroot}
 install -D -m755 apache2/.libs/mod_security2.so %{buildroot}/%{_libdir}/httpd/modules/mod_security2.so
 install -D -m644 %{SOURCE1} %{buildroot}/%{_sysconfdir}/httpd/conf.d/mod_security.conf
 install -d %{buildroot}/%{_sysconfdir}/httpd/modsecurity.d/
-install -D -m644 rules/*.conf %{buildroot}/%{_sysconfdir}/httpd/modsecurity.d/
+test -e rules/*.conf && install -D -m644 rules/*.conf \
+    %{buildroot}/%{_sysconfdir}/httpd/modsecurity.d/
 cp -R rules/base_rules %{buildroot}/%{_sysconfdir}/httpd/modsecurity.d/
 cp -R rules/optional_rules %{buildroot}/%{_sysconfdir}/httpd/modsecurity.d/
 install -D -m644 %{SOURCE2} %{buildroot}/%{_sysconfdir}/httpd/modsecurity.d/modsecurity_localrules.conf
@@ -57,6 +58,7 @@ rm -rf %{buildroot}
 %changelog
 * Fri Feb 10 2012 Petr Pisar <ppisar@redhat.com> - 2.5.13-3
 - Rebuild against PCRE 8.30
+- Do not install non-existing files
 
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.5.13-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
