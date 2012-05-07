@@ -1,14 +1,12 @@
 Summary: Security module for the Apache HTTP Server
 Name: mod_security 
-Version: 2.5.13
-Release: 3%{?dist}
-License: GPLv2
+Version: 2.6.5
+Release: 2%{?dist}
+License: ASL 2.0
 URL: http://www.modsecurity.org/
 Group: System Environment/Daemons
 Source: http://www.modsecurity.org/download/modsecurity-apache_%{version}.tar.gz
 Source1: mod_security.conf
-Source2: modsecurity_localrules.conf
-BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Requires: httpd httpd-mmn = %([ -a %{_includedir}/httpd/.mmn ] && cat %{_includedir}/httpd/.mmn || echo missing)
 BuildRequires: httpd-devel libxml2-devel pcre-devel curl-devel lua-devel
 
@@ -17,45 +15,71 @@ ModSecurity is an open source intrusion detection and prevention engine
 for web applications. It operates embedded into the web server, acting
 as a powerful umbrella - shielding web applications from attacks.
 
-%prep
+%package -n     mlogc
+Summary:        ModSecurity Audit Log Collector
+Group:          System Environment/Daemons
+Requires:       mod_security
 
-%setup -n modsecurity-apache_%{version}
+%description -n mlogc
+This package contains the ModSecurity Audit Log Collector.
+
+%prep
+%setup -q -n modsecurity-apache_%{version}
 
 %build
-cd apache2
-%configure
+%configure --enable-pcre-match-limit=1000000 --enable-pcre-match-limit-recursion=1000000
+# remove rpath
+sed -i 's|^hardcode_libdir_flag_spec=.*|hardcode_libdir_flag_spec=""|g' libtool
+sed -i 's|^runpath_var=LD_RUN_PATH|runpath_var=DIE_RPATH_DIE|g' libtool
+
 make %{_smp_mflags}
-make %{_smp_mflags} mlogc
 
 %install
 rm -rf %{buildroot}
-install -D -m755 apache2/.libs/mod_security2.so %{buildroot}/%{_libdir}/httpd/modules/mod_security2.so
-install -D -m644 %{SOURCE1} %{buildroot}/%{_sysconfdir}/httpd/conf.d/mod_security.conf
-install -d %{buildroot}/%{_sysconfdir}/httpd/modsecurity.d/
-test -e rules/*.conf && install -D -m644 rules/*.conf \
-    %{buildroot}/%{_sysconfdir}/httpd/modsecurity.d/
-cp -R rules/base_rules %{buildroot}/%{_sysconfdir}/httpd/modsecurity.d/
-cp -R rules/optional_rules %{buildroot}/%{_sysconfdir}/httpd/modsecurity.d/
-install -D -m644 %{SOURCE2} %{buildroot}/%{_sysconfdir}/httpd/modsecurity.d/modsecurity_localrules.conf
-install -Dp tools/mlogc %{buildroot}/%{_bindir}/mlogc
-install -D -m644 apache2/mlogc-src/mlogc-default.conf %{buildroot}/%{_sysconfdir}/mlogc.conf
+
+install -d %{buildroot}%{_sbindir}
+install -d %{buildroot}%{_bindir}
+install -d %{buildroot}%{_libdir}/httpd/modules
+install -d %{buildroot}%{_sysconfdir}/httpd/conf.d/
+install -d %{buildroot}%{_sysconfdir}/httpd/modsecurity.d/
+install -d %{buildroot}%{_sysconfdir}/httpd/modsecurity.d/activated_rules
+
+install -m0755 apache2/.libs/mod_security2.so %{buildroot}%{_libdir}/httpd/modules/mod_security2.so
+install -m0644 %{SOURCE1} %{buildroot}%{_sysconfdir}/httpd/conf.d/mod_security.conf
+
+# mlogc
+install -d %{buildroot}%{_localstatedir}/log/mlogc
+install -d %{buildroot}%{_localstatedir}/log/mlogc/data
+install -m0755 mlogc/mlogc %{buildroot}%{_bindir}/mlogc
+install -m0755 mlogc/mlogc-batch-load.pl %{buildroot}%{_bindir}/mlogc-batch-load
+install -m0644 mlogc/mlogc-default.conf %{buildroot}%{_sysconfdir}/mlogc.conf
 
 %clean
 rm -rf %{buildroot}
 
 %files
-%defattr (-,root,root)
-%doc rules/util CHANGES LICENSE README.* modsecurity* doc MODSECURITY_LICENSING_EXCEPTION
+%doc CHANGES LICENSE README.TXT NOTICE
 %{_libdir}/httpd/modules/mod_security2.so
-%{_bindir}/mlogc
-%config(noreplace) %{_sysconfdir}/mlogc.conf
 %config(noreplace) %{_sysconfdir}/httpd/conf.d/mod_security.conf
 %dir %{_sysconfdir}/httpd/modsecurity.d
-%{_sysconfdir}/httpd/modsecurity.d/optional_rules
-%{_sysconfdir}/httpd/modsecurity.d/base_rules
-%config(noreplace) %{_sysconfdir}/httpd/modsecurity.d/*.conf
+%dir %{_sysconfdir}/httpd/modsecurity.d/activated_rules
+
+%files -n mlogc
+%doc mlogc/INSTALL
+%attr(0640,root,apache) %config(noreplace) %{_sysconfdir}/mlogc.conf
+%attr(0755,root,root) %dir %{_localstatedir}/log/mlogc
+%attr(0770,root,apache) %dir %{_localstatedir}/log/mlogc/data
+%attr(0755,root,root) %{_bindir}/mlogc
+%attr(0755,root,root) %{_bindir}/mlogc-batch-load
+
 
 %changelog
+* Fri Apr 27 2012 Peter Vrabec <pvrabec@redhat.com> 2.6.5-2
+- fix license tag
+
+* Thu Apr 05 2012 Peter Vrabec <pvrabec@redhat.com> 2.6.5-1
+- upgrade & move rules into new package mod_security_crs
+
 * Fri Feb 10 2012 Petr Pisar <ppisar@redhat.com> - 2.5.13-3
 - Rebuild against PCRE 8.30
 - Do not install non-existing files
