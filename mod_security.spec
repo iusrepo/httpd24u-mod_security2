@@ -1,13 +1,20 @@
+%{!?_httpd_apxs: %{expand: %%global _httpd_apxs %%{_sbindir}/apxs}}
+%{!?_httpd_mmn: %{expand: %%global _httpd_mmn %%(cat %{_includedir}/httpd/.mmn || echo missing-httpd-devel)}}
+# /etc/httpd/conf.d with httpd < 2.4 and defined as /etc/httpd/conf.modules.d with httpd >= 2.4
+%{!?_httpd_modconfdir: %{expand: %%global _httpd_modconfdir %%{_sysconfdir}/httpd/conf.d}}
+%{!?_httpd_confdir:    %{expand: %%global _httpd_confdir    %%{_sysconfdir}/httpd/conf.d}}
+%{!?_httpd_moddir:    %{expand: %%global _httpd_moddir    %%{_libdir}/httpd/modules}}
+
 Summary: Security module for the Apache HTTP Server
 Name: mod_security 
 Version: 2.6.5
-Release: 2%{?dist}
+Release: 3%{?dist}
 License: ASL 2.0
 URL: http://www.modsecurity.org/
 Group: System Environment/Daemons
 Source: http://www.modsecurity.org/download/modsecurity-apache_%{version}.tar.gz
 Source1: mod_security.conf
-Requires: httpd httpd-mmn = %([ -a %{_includedir}/httpd/.mmn ] && cat %{_includedir}/httpd/.mmn || echo missing)
+Requires: httpd httpd-mmn = %{_httpd_mmn}
 BuildRequires: httpd-devel libxml2-devel pcre-devel curl-devel lua-devel
 
 %description
@@ -27,7 +34,9 @@ This package contains the ModSecurity Audit Log Collector.
 %setup -q -n modsecurity-apache_%{version}
 
 %build
-%configure --enable-pcre-match-limit=1000000 --enable-pcre-match-limit-recursion=1000000
+%configure --enable-pcre-match-limit=1000000 \
+           --enable-pcre-match-limit-recursion=1000000 \
+           --with-apxs=%{_httpd_apxs}
 # remove rpath
 sed -i 's|^hardcode_libdir_flag_spec=.*|hardcode_libdir_flag_spec=""|g' libtool
 sed -i 's|^runpath_var=LD_RUN_PATH|runpath_var=DIE_RPATH_DIE|g' libtool
@@ -39,13 +48,23 @@ rm -rf %{buildroot}
 
 install -d %{buildroot}%{_sbindir}
 install -d %{buildroot}%{_bindir}
-install -d %{buildroot}%{_libdir}/httpd/modules
-install -d %{buildroot}%{_sysconfdir}/httpd/conf.d/
+install -d %{buildroot}%{_httpd_moddir}
 install -d %{buildroot}%{_sysconfdir}/httpd/modsecurity.d/
 install -d %{buildroot}%{_sysconfdir}/httpd/modsecurity.d/activated_rules
 
-install -m0755 apache2/.libs/mod_security2.so %{buildroot}%{_libdir}/httpd/modules/mod_security2.so
-install -m0644 %{SOURCE1} %{buildroot}%{_sysconfdir}/httpd/conf.d/mod_security.conf
+install -m0755 apache2/.libs/mod_security2.so %{buildroot}%{_httpd_moddir}/mod_security2.so
+
+%if "%{_httpd_modconfdir}" != "%{_httpd_confdir}"
+# 2.4-style
+sed -n /^LoadModule/p %{SOURCE1} > 10-mod_security.conf
+sed    /LoadModule/d  %{SOURCE1} > mod_security.conf
+touch -r %{SOURCE1} *.conf
+install -Dp -m0644 mod_security.conf %{buildroot}%{_httpd_confdir}/mod_security.conf
+install -Dp -m0644 10-mod_security.conf %{buildroot}%{_httpd_modconfdir}/10-mod_security.conf
+%else
+# 2.2-style
+install -Dp -m0644 %{SOURCE1} %{buildroot}%{_httpd_confdir}/mod_security.conf
+%endif
 
 # mlogc
 install -d %{buildroot}%{_localstatedir}/log/mlogc
@@ -58,13 +77,18 @@ install -m0644 mlogc/mlogc-default.conf %{buildroot}%{_sysconfdir}/mlogc.conf
 rm -rf %{buildroot}
 
 %files
+%defattr (-,root,root)
 %doc CHANGES LICENSE README.TXT NOTICE
-%{_libdir}/httpd/modules/mod_security2.so
-%config(noreplace) %{_sysconfdir}/httpd/conf.d/mod_security.conf
+%{_httpd_moddir}/mod_security2.so
+%config(noreplace) %{_httpd_confdir}/*.conf
+%if "%{_httpd_modconfdir}" != "%{_httpd_confdir}"
+%config(noreplace) %{_httpd_modconfdir}/*.conf
+%endif
 %dir %{_sysconfdir}/httpd/modsecurity.d
 %dir %{_sysconfdir}/httpd/modsecurity.d/activated_rules
 
 %files -n mlogc
+%defattr (-,root,root)
 %doc mlogc/INSTALL
 %attr(0640,root,apache) %config(noreplace) %{_sysconfdir}/mlogc.conf
 %attr(0755,root,root) %dir %{_localstatedir}/log/mlogc
@@ -74,6 +98,9 @@ rm -rf %{buildroot}
 
 
 %changelog
+* Mon May  7 2012 Joe Orton <jorton@redhat.com> - 2.6.5-3
+- packaging fixes
+
 * Fri Apr 27 2012 Peter Vrabec <pvrabec@redhat.com> 2.6.5-2
 - fix license tag
 
