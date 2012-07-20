@@ -8,7 +8,7 @@
 Summary: Security module for the Apache HTTP Server
 Name: mod_security 
 Version: 2.6.6
-Release: 2%{?dist}
+Release: 3%{?dist}
 License: ASL 2.0
 URL: http://www.modsecurity.org/
 Group: System Environment/Daemons
@@ -103,6 +103,9 @@ rm -rf %{buildroot}
 %endif
 
 %changelog
+* Fri Jul 20 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.6.6-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_18_Mass_Rebuild
+
 * Fri Jun 22 2012 Peter Vrabec <pvrabec@redhat.com> - 2.6.6-2
 - mlogc subpackage is not provided on RHEL
  
