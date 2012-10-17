@@ -7,7 +7,7 @@
 
 Summary: Security module for the Apache HTTP Server
 Name: mod_security 
-Version: 2.6.8
+Version: 2.7.0
 Release: 1%{?dist}
 License: ASL 2.0
 URL: http://www.modsecurity.org/
@@ -22,7 +22,6 @@ ModSecurity is an open source intrusion detection and prevention engine
 for web applications. It operates embedded into the web server, acting
 as a powerful umbrella - shielding web applications from attacks.
 
-%if 0%{?fedora}
 %package -n     mlogc
 Summary:        ModSecurity Audit Log Collector
 Group:          System Environment/Daemons
@@ -30,7 +29,6 @@ Requires:       mod_security
 
 %description -n mlogc
 This package contains the ModSecurity Audit Log Collector.
-%endif
 
 %prep
 %setup -q -n modsecurity-apache_%{version}
@@ -68,14 +66,12 @@ install -Dp -m0644 10-mod_security.conf %{buildroot}%{_httpd_modconfdir}/10-mod_
 install -Dp -m0644 %{SOURCE1} %{buildroot}%{_httpd_confdir}/mod_security.conf
 %endif
 
-%if 0%{?fedora}
 # mlogc
 install -d %{buildroot}%{_localstatedir}/log/mlogc
 install -d %{buildroot}%{_localstatedir}/log/mlogc/data
 install -m0755 mlogc/mlogc %{buildroot}%{_bindir}/mlogc
 install -m0755 mlogc/mlogc-batch-load.pl %{buildroot}%{_bindir}/mlogc-batch-load
 install -m0644 mlogc/mlogc-default.conf %{buildroot}%{_sysconfdir}/mlogc.conf
-%endif
 
 %clean
 rm -rf %{buildroot}
@@ -91,7 +87,6 @@ rm -rf %{buildroot}
 %dir %{_sysconfdir}/httpd/modsecurity.d
 %dir %{_sysconfdir}/httpd/modsecurity.d/activated_rules
 
-%if 0%{?fedora}
 %files -n mlogc
 %defattr (-,root,root)
 %doc mlogc/INSTALL
@@ -100,11 +95,19 @@ rm -rf %{buildroot}
 %attr(0770,root,apache) %dir %{_localstatedir}/log/mlogc/data
 %attr(0755,root,root) %{_bindir}/mlogc
 %attr(0755,root,root) %{_bindir}/mlogc-batch-load
-%endif
 
 %changelog
+* Wed Oct 17 2012 Athmane Madjoudj <athmane@fedoraproject.org> 2.7.0-1
+- Update to 2.7.0
+
 * Fri Sep 28 2012 Athmane Madjoudj <athmane@fedoraproject.org> 2.6.8-1
 - Update to 2.6.8
+
+* Wed Sep 12 2012 Athmane Madjoudj <athmane@fedoraproject.org> 2.6.7-2
+- Re-add mlogc sub-package for epel (#856525)
+ 
+* Sat Aug 25 2012 Athmane Madjoudj <athmane@fedoraproject.org> 2.6.7-1
+- Update to 2.6.7
 
 * Sat Aug 25 2012 Athmane Madjoudj <athmane@fedoraproject.org> 2.6.7-1
 - Update to 2.6.7
