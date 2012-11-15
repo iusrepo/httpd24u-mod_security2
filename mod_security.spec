@@ -7,18 +7,15 @@
 
 Summary: Security module for the Apache HTTP Server
 Name: mod_security 
-Version: 2.7.0
-Release: 2%{?dist}
+Version: 2.7.1
+Release: 1%{?dist}
 License: ASL 2.0
 URL: http://www.modsecurity.org/
 Group: System Environment/Daemons
-Source: http://www.modsecurity.org/download/modsecurity-apache_%{version}.tar.gz
+Source: https://github.com/downloads/SpiderLabs/ModSecurity/modsecurity-apache_%{version}.tar.gz
 Source1: mod_security.conf
 Requires: httpd httpd-mmn = %{_httpd_mmn}
 BuildRequires: httpd-devel libxml2-devel pcre-devel curl-devel lua-devel
-
-# Reported to upstream
-Patch0: mod_security-fix-build-with-libxml29.patch
 
 %description
 ModSecurity is an open source intrusion detection and prevention engine
@@ -35,7 +32,6 @@ This package contains the ModSecurity Audit Log Collector.
 
 %prep
 %setup -q -n modsecurity-apache_%{version}
-%patch0 -p0
 
 %build
 %configure --enable-pcre-match-limit=1000000 \
@@ -101,6 +97,11 @@ rm -rf %{buildroot}
 %attr(0755,root,root) %{_bindir}/mlogc-batch-load
 
 %changelog
+* Thu Nov 15 2012 Athmane Madjoudj <athmane@fedoraproject.org> 2.7.1-1
+- Update to 2.7.1
+- Remove libxml2 build patch (upstreamed)
+- Update spec since upstream moved to github
+
 * Thu Oct 18 2012 Athmane Madjoudj <athmane@fedoraproject.org> 2.7.0-2
 - Add a patch to fix failed build against libxml2 >= 2.9.0
 
