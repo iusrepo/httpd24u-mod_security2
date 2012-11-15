@@ -8,7 +8,7 @@
 Summary: Security module for the Apache HTTP Server
 Name: mod_security 
 Version: 2.7.1
-Release: 2%{?dist}
+Release: 3%{?dist}
 License: ASL 2.0
 URL: http://www.modsecurity.org/
 Group: System Environment/Daemons
@@ -65,6 +65,7 @@ install -Dp -m0644 10-mod_security.conf %{buildroot}%{_httpd_modconfdir}/10-mod_
 # 2.2-style
 install -Dp -m0644 %{SOURCE1} %{buildroot}%{_httpd_confdir}/mod_security.conf
 %endif
+install -m 700 -d $RPM_BUILD_ROOT%{_localstatedir}/lib/%{name}
 
 # mlogc
 install -d %{buildroot}%{_localstatedir}/log/mlogc
@@ -72,6 +73,7 @@ install -d %{buildroot}%{_localstatedir}/log/mlogc/data
 install -m0755 mlogc/mlogc %{buildroot}%{_bindir}/mlogc
 install -m0755 mlogc/mlogc-batch-load.pl %{buildroot}%{_bindir}/mlogc-batch-load
 install -m0644 mlogc/mlogc-default.conf %{buildroot}%{_sysconfdir}/mlogc.conf
+
 
 %clean
 rm -rf %{buildroot}
@@ -86,6 +88,7 @@ rm -rf %{buildroot}
 %endif
 %dir %{_sysconfdir}/httpd/modsecurity.d
 %dir %{_sysconfdir}/httpd/modsecurity.d/activated_rules
+%attr(770,apache,root) %dir %{_localstatedir}/lib/%{name}
 
 %files -n mlogc
 %defattr (-,root,root)
@@ -97,6 +100,11 @@ rm -rf %{buildroot}
 %attr(0755,root,root) %{_bindir}/mlogc-batch-load
 
 %changelog
+* Thu Nov 15 2012 Athmane Madjoudj <athmane@fedoraproject.org> 2.7.1-3
+- Add some missing directives RHBZ #569360
+- Fix multipart/invalid part ruleset bypass issue (CVE-2012-4528)
+  (RHBZ #867424, #867773, #867774)
+
 * Thu Nov 15 2012 Athmane Madjoudj <athmane@fedoraproject.org> 2.7.1-2
 - Fix mod_security.conf
 
