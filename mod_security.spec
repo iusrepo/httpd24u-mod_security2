@@ -5,10 +5,12 @@
 %{!?_httpd_confdir:    %{expand: %%global _httpd_confdir    %%{_sysconfdir}/httpd/conf.d}}
 %{!?_httpd_moddir:    %{expand: %%global _httpd_moddir    %%{_libdir}/httpd/modules}}
 
+%global with_mlogc 0%{?fedora} || 0%{?rhel} <= 6
+
 Summary: Security module for the Apache HTTP Server
 Name: mod_security 
 Version: 2.7.1
-Release: 3%{?dist}
+Release: 4%{?dist}
 License: ASL 2.0
 URL: http://www.modsecurity.org/
 Group: System Environment/Daemons
@@ -22,6 +24,7 @@ ModSecurity is an open source intrusion detection and prevention engine
 for web applications. It operates embedded into the web server, acting
 as a powerful umbrella - shielding web applications from attacks.
 
+%if %with_mlogc
 %package -n     mlogc
 Summary:        ModSecurity Audit Log Collector
 Group:          System Environment/Daemons
@@ -29,6 +32,7 @@ Requires:       mod_security
 
 %description -n mlogc
 This package contains the ModSecurity Audit Log Collector.
+%endif
 
 %prep
 %setup -q -n modsecurity-apache_%{version}
@@ -68,12 +72,13 @@ install -Dp -m0644 %{SOURCE1} %{buildroot}%{_httpd_confdir}/mod_security.conf
 install -m 700 -d $RPM_BUILD_ROOT%{_localstatedir}/lib/%{name}
 
 # mlogc
+%if %with_mlogc
 install -d %{buildroot}%{_localstatedir}/log/mlogc
 install -d %{buildroot}%{_localstatedir}/log/mlogc/data
 install -m0755 mlogc/mlogc %{buildroot}%{_bindir}/mlogc
 install -m0755 mlogc/mlogc-batch-load.pl %{buildroot}%{_bindir}/mlogc-batch-load
 install -m0644 mlogc/mlogc-default.conf %{buildroot}%{_sysconfdir}/mlogc.conf
-
+%endif
 
 %clean
 rm -rf %{buildroot}
@@ -90,6 +95,7 @@ rm -rf %{buildroot}
 %dir %{_sysconfdir}/httpd/modsecurity.d/activated_rules
 %attr(770,apache,root) %dir %{_localstatedir}/lib/%{name}
 
+%if %with_mlogc
 %files -n mlogc
 %defattr (-,root,root)
 %doc mlogc/INSTALL
@@ -98,8 +104,12 @@ rm -rf %{buildroot}
 %attr(0770,root,apache) %dir %{_localstatedir}/log/mlogc/data
 %attr(0755,root,root) %{_bindir}/mlogc
 %attr(0755,root,root) %{_bindir}/mlogc-batch-load
+%endif
 
 %changelog
+* Mon Nov 19 2012 Peter Vrabec <pvrabec@redhat.com> 2.7.1-4
+- mlogc subpackage is not provided on RHEL7
+
 * Thu Nov 15 2012 Athmane Madjoudj <athmane@fedoraproject.org> 2.7.1-3
 - Add some missing directives RHBZ #569360
 - Fix multipart/invalid part ruleset bypass issue (CVE-2012-4528)
