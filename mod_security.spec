@@ -10,12 +10,13 @@
 Summary: Security module for the Apache HTTP Server
 Name: mod_security 
 Version: 2.7.1
-Release: 4%{?dist}
+Release: 5%{?dist}
 License: ASL 2.0
 URL: http://www.modsecurity.org/
 Group: System Environment/Daemons
 Source: https://github.com/downloads/SpiderLabs/ModSecurity/modsecurity-apache_%{version}.tar.gz
 Source1: mod_security.conf
+Source2: 10-mod_security.conf
 Requires: httpd httpd-mmn = %{_httpd_mmn}
 BuildRequires: httpd-devel libxml2-devel pcre-devel curl-devel lua-devel
 
@@ -60,14 +61,13 @@ install -m0755 apache2/.libs/mod_security2.so %{buildroot}%{_httpd_moddir}/mod_s
 
 %if "%{_httpd_modconfdir}" != "%{_httpd_confdir}"
 # 2.4-style
-sed -n /^LoadModule/p %{SOURCE1} > 10-mod_security.conf
-sed    /LoadModule/d  %{SOURCE1} > mod_security.conf
-touch -r %{SOURCE1} *.conf
-install -Dp -m0644 mod_security.conf %{buildroot}%{_httpd_confdir}/mod_security.conf
-install -Dp -m0644 10-mod_security.conf %{buildroot}%{_httpd_modconfdir}/10-mod_security.conf
+install -Dp -m0644 %{SOURCE2} %{buildroot}%{_httpd_modconfdir}/10-mod_security.conf
+install -Dp -m0644 %{SOURCE1} %{buildroot}%{_httpd_confdir}/mod_security.conf
+sed  -i 's/Include/IncludeOptional/'  %{buildroot}%{_httpd_confdir}/mod_security.conf
 %else
 # 2.2-style
-install -Dp -m0644 %{SOURCE1} %{buildroot}%{_httpd_confdir}/mod_security.conf
+install -d -m0755 %{buildroot}%{_httpd_confdir}
+cat %{SOURCE2} %{SOURCE1} > %{buildroot}%{_httpd_confdir}/mod_security.conf
 %endif
 install -m 700 -d $RPM_BUILD_ROOT%{_localstatedir}/lib/%{name}
 
@@ -107,6 +107,10 @@ rm -rf %{buildroot}
 %endif
 
 %changelog
+* Thu Nov 22 2012 Athmane Madjoudj <athmane@fedoraproject.org> 2.7.1-5
+- Use conditional for loading mod_unique_id (rhbz #879264)
+- Fix syntax errors on httpd 2.4.x by using IncludeOptional (rhbz #879264, comment #2)
+
 * Mon Nov 19 2012 Peter Vrabec <pvrabec@redhat.com> 2.7.1-4
 - mlogc subpackage is not provided on RHEL7
 
