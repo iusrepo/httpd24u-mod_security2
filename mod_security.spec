@@ -9,12 +9,12 @@
 
 Summary: Security module for the Apache HTTP Server
 Name: mod_security 
-Version: 2.7.1
-Release: 5%{?dist}
+Version: 2.7.2
+Release: 1%{?dist}
 License: ASL 2.0
 URL: http://www.modsecurity.org/
 Group: System Environment/Daemons
-Source: https://github.com/downloads/SpiderLabs/ModSecurity/modsecurity-apache_%{version}.tar.gz
+Source: http://www.modsecurity.org/tarball/2.7.2/modsecurity-apache_%{version}.tar.gz
 Source1: mod_security.conf
 Source2: 10-mod_security.conf
 Requires: httpd httpd-mmn = %{_httpd_mmn}
@@ -107,6 +107,10 @@ rm -rf %{buildroot}
 %endif
 
 %changelog
+* Fri Jan 25 2013 Athmane Madjoudj <athmane@fedoraproject.org> 2.7.2-1
+- Update to 2.7.2
+- Update source url in the spec.
+
 * Thu Nov 22 2012 Athmane Madjoudj <athmane@fedoraproject.org> 2.7.1-5
 - Use conditional for loading mod_unique_id (rhbz #879264)
 - Fix syntax errors on httpd 2.4.x by using IncludeOptional (rhbz #879264, comment #2)
