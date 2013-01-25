@@ -14,7 +14,7 @@ Release: 1%{?dist}
 License: ASL 2.0
 URL: http://www.modsecurity.org/
 Group: System Environment/Daemons
-Source: http://www.modsecurity.org/tarball/2.7.2/modsecurity-apache_%{version}.tar.gz
+Source: http://www.modsecurity.org/tarball/%{version}/modsecurity-apache_%{version}.tar.gz
 Source1: mod_security.conf
 Source2: 10-mod_security.conf
 Requires: httpd httpd-mmn = %{_httpd_mmn}
