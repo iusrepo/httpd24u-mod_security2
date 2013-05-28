@@ -9,15 +9,14 @@
 
 Summary: Security module for the Apache HTTP Server
 Name: mod_security 
-Version: 2.7.3
-Release: 2%{?dist}
+Version: 2.7.4
+Release: 1%{?dist}
 License: ASL 2.0
 URL: http://www.modsecurity.org/
 Group: System Environment/Daemons
 Source: http://www.modsecurity.org/tarball/%{version}/modsecurity-apache_%{version}.tar.gz
 Source1: mod_security.conf
 Source2: 10-mod_security.conf
-Patch0: mod_security-2.7.3-fix-mem-leak-and-cve-2013-2765.patch
 Requires: httpd httpd-mmn = %{_httpd_mmn}
 BuildRequires: httpd-devel libxml2-devel pcre-devel curl-devel lua-devel
 
@@ -38,7 +37,6 @@ This package contains the ModSecurity Audit Log Collector.
 
 %prep
 %setup -q -n modsecurity-apache_%{version}
-%patch0 -p1
 
 %build
 %configure --enable-pcre-match-limit=1000000 \
@@ -109,6 +107,10 @@ rm -rf %{buildroot}
 %endif
 
 %changelog
+* Tue May 28 2013 Athmane Madjoudj <athmane@fedoraproject.org> 2.7.4-1
+- Update to 2.7.4
+- Drop non required patch
+
 * Tue May 28 2013 Athmane Madjoudj <athmane@fedoraproject.org> 2.7.3-2
 - Fix NULL pointer dereference (DoS, crash) (CVE-2013-2765) (RHBZ #967615)
 - Fix a possible memory leak.
