@@ -10,7 +10,7 @@
 Summary: Security module for the Apache HTTP Server
 Name: mod_security 
 Version: 2.7.4
-Release: 1%{?dist}
+Release: 2%{?dist}
 License: ASL 2.0
 URL: http://www.modsecurity.org/
 Group: System Environment/Daemons
@@ -107,6 +107,9 @@ rm -rf %{buildroot}
 %endif
 
 %changelog
+* Thu Jul 18 2013 Petr Pisar <ppisar@redhat.com> - 2.7.4-2
+- Perl 5.18 rebuild
+
 * Tue May 28 2013 Athmane Madjoudj <athmane@fedoraproject.org> 2.7.4-1
 - Update to 2.7.4
 - Drop non required patch
