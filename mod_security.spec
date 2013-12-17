@@ -9,12 +9,12 @@
 
 Summary: Security module for the Apache HTTP Server
 Name: mod_security 
-Version: 2.7.5
-Release: 2%{?dist}
+Version: 2.7.6
+Release: 1%{?dist}
 License: ASL 2.0
 URL: http://www.modsecurity.org/
 Group: System Environment/Daemons
-Source: http://www.modsecurity.org/tarball/%{version}/modsecurity-apache_%{version}.tar.gz
+Source: https://github.com/SpiderLabs/ModSecurity/archive/v%{version}.tar.gz
 Source1: mod_security.conf
 Source2: 10-mod_security.conf
 Requires: httpd httpd-mmn = %{_httpd_mmn}
@@ -36,9 +36,12 @@ This package contains the ModSecurity Audit Log Collector.
 %endif
 
 %prep
-%setup -q -n modsecurity-apache_%{version}
+%setup -q -n ModSecurity-%{version}
 
 %build
+# Autogen issue reporte to upstream: 
+# https://github.com/SpiderLabs/ModSecurity/issues/621
+./autogen.sh
 %configure --enable-pcre-match-limit=1000000 \
            --enable-pcre-match-limit-recursion=1000000 \
            --with-apxs=%{_httpd_apxs}
@@ -107,6 +110,10 @@ rm -rf %{buildroot}
 %endif
 
 %changelog
+* Tue Dec 17 2013 Athmane Madjoudj <athmane@fedoraproject.org> 2.7.6-1
+- Update to 2.7.6
+- Fix spec since upstream will only provide tarball via Github
+
 * Sat Aug 03 2013 Petr Pisar <ppisar@redhat.com> - 2.7.5-2
 - Perl 5.18 rebuild
 
