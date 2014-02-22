@@ -10,7 +10,7 @@
 Summary: Security module for the Apache HTTP Server
 Name: mod_security 
 Version: 2.7.7
-Release: 2%{?dist}
+Release: 3%{?dist}
 License: ASL 2.0
 URL: http://www.modsecurity.org/
 Group: System Environment/Daemons
@@ -107,10 +107,13 @@ rm -rf %{buildroot}
 %endif
 
 %changelog
+* Sat Feb 22 2014 Athmane Madjoudj <athmane@fedoraproject.org> 2.7.7-3
+- Fix bogus date in chanelog
+
 * Thu Jan 23 2014 Joe Orton <jorton@redhat.com> - 2.7.7-2
 - fix _httpd_mmn expansion in absence of httpd-devel
 
-* Thu Dec 19 2013  2.7.7-1
+* Thu Dec 19 2013 Athmane Madjoudj <athmane@fedoraproject.org> 2.7.7-1
 - Update to 2.7.7
 - Fix the spec file since upstream fixed the bugs reported.
 
@@ -208,7 +211,7 @@ rm -rf %{buildroot}
 * Fri Jan 13 2012 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.5.13-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_17_Mass_Rebuild
 
-* Wed May 3 2011 Michael Fleming <mfleming+rpm@thatfleminggent.com> - 2.5.13-1
+* Tue  May 3 2011 Michael Fleming <mfleming+rpm@thatfleminggent.com> - 2.5.13-1
 - Newer upstream version
 
 * Wed Jun 30 2010 Michael Fleming <mfleming+rpm@thatfleminggent.com> - 2.5.12-3
@@ -256,7 +259,7 @@ rm -rf %{buildroot}
 * Tue Feb 19 2008 Fedora Release Engineering <rel-eng@fedoraproject.org> - 2.1.5-3
 - Autorebuild for GCC 4.3
 
-* Sat Jan 27 2008 Michael Fleming <mfleming+rpm@enlartenment.com> 2.1.5-2
+* Sun Jan 27 2008 Michael Fleming <mfleming+rpm@enlartenment.com> 2.1.5-2
 - Update to 2.1.5 (bz#425986)
 - "blocking" -> "optional_rules" per tarball ;-)
 
