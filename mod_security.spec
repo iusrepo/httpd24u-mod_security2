@@ -10,7 +10,7 @@
 Summary: Security module for the Apache HTTP Server
 Name: mod_security 
 Version: 2.7.7
-Release: 3%{?dist}
+Release: 4%{?dist}
 License: ASL 2.0
 URL: http://www.modsecurity.org/
 Group: System Environment/Daemons
@@ -47,6 +47,12 @@ sed -i 's|^hardcode_libdir_flag_spec=.*|hardcode_libdir_flag_spec=""|g' libtool
 sed -i 's|^runpath_var=LD_RUN_PATH|runpath_var=DIE_RPATH_DIE|g' libtool
 
 make %{_smp_mflags}
+
+# Test suite does not start because of some issue in shipped httpd config (fix upstreamed in PR #669)
+# After the fix, the test suite starts but still fails
+#%check
+#make test
+#make test-regression
 
 %install
 rm -rf %{buildroot}
@@ -107,6 +113,9 @@ rm -rf %{buildroot}
 %endif
 
 %changelog
+* Thu Feb 27 2014 Athmane Madjoudj <athmane@fedoraproject.org> 2.7.7-4
+- Add check section
+
 * Sat Feb 22 2014 Athmane Madjoudj <athmane@fedoraproject.org> 2.7.7-3
 - Fix bogus date in chanelog
 
