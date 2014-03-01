@@ -10,7 +10,7 @@
 Summary: Security module for the Apache HTTP Server
 Name: mod_security 
 Version: 2.7.7
-Release: 4%{?dist}
+Release: 5%{?dist}
 License: ASL 2.0
 URL: http://www.modsecurity.org/
 Group: System Environment/Daemons
@@ -48,9 +48,9 @@ sed -i 's|^runpath_var=LD_RUN_PATH|runpath_var=DIE_RPATH_DIE|g' libtool
 
 make %{_smp_mflags}
 
+%check
 # Test suite does not start because of some issue in shipped httpd config (fix upstreamed in PR #669)
 # After the fix, the test suite starts but still fails
-#%check
 #make test
 #make test-regression
 
@@ -113,6 +113,9 @@ rm -rf %{buildroot}
 %endif
 
 %changelog
+* Sat Mar 01 2014 Athmane Madjoudj <athmane@fedoraproject.org> 2.7.7-5
+- Fix rpmlint warnings
+
 * Thu Feb 27 2014 Athmane Madjoudj <athmane@fedoraproject.org> 2.7.7-4
 - Add check section
 
