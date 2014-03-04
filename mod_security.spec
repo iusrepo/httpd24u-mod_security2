@@ -10,7 +10,7 @@
 Summary: Security module for the Apache HTTP Server
 Name: mod_security 
 Version: 2.7.7
-Release: 5%{?dist}
+Release: 6%{?dist}
 License: ASL 2.0
 URL: http://www.modsecurity.org/
 Group: System Environment/Daemons
@@ -113,6 +113,9 @@ rm -rf %{buildroot}
 %endif
 
 %changelog
+* Tue Mar 04 2014 Athmane Madjoudj <athmane@fedoraproject.org> 2.7.7-6
+- Fix status code in the configuration file (upstream PR #666)
+
 * Sat Mar 01 2014 Athmane Madjoudj <athmane@fedoraproject.org> 2.7.7-5
 - Fix rpmlint warnings
 
