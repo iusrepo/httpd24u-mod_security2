@@ -9,12 +9,12 @@
 
 Summary: Security module for the Apache HTTP Server
 Name: mod_security 
-Version: 2.7.7
-Release: 6%{?dist}
+Version: 2.8.0
+Release: 1%{?dist}
 License: ASL 2.0
 URL: http://www.modsecurity.org/
 Group: System Environment/Daemons
-Source: https://www.modsecurity.org/tarball/%{version}/modsecurity-apache_%{version}.tar.gz
+Source: https://www.modsecurity.org/tarball/%{version}/modsecurity-%{version}.tar.gz
 Source1: mod_security.conf
 Source2: 10-mod_security.conf
 Requires: httpd httpd-mmn = %{_httpd_mmn}
@@ -36,7 +36,7 @@ This package contains the ModSecurity Audit Log Collector.
 %endif
 
 %prep
-%setup -q -n modsecurity-apache_%{version}
+%setup -q -n modsecurity-%{version}
 
 %build
 %configure --enable-pcre-match-limit=1000000 \
@@ -113,6 +113,12 @@ rm -rf %{buildroot}
 %endif
 
 %changelog
+* Wed Apr 16 2014  Athmane Madjoudj <athmane@fedoraproject.org> 2.8.0-1
+- Update to 2.8.0 Final
+
+* Thu Apr 03 2014 Athmane Madjoudj <athmane@fedoraproject.org> 2.8.0-0.rc1
+- Update to 2.8.0-RC1
+
 * Tue Mar 04 2014 Athmane Madjoudj <athmane@fedoraproject.org> 2.7.7-6
 - Fix status code in the configuration file (upstream PR #666)
 
