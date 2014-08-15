@@ -10,13 +10,14 @@
 Summary: Security module for the Apache HTTP Server
 Name: mod_security 
 Version: 2.8.0
-Release: 2%{?dist}
+Release: 4%{?dist}
 License: ASL 2.0
 URL: http://www.modsecurity.org/
 Group: System Environment/Daemons
 Source: https://www.modsecurity.org/tarball/%{version}/modsecurity-%{version}.tar.gz
 Source1: mod_security.conf
 Source2: 10-mod_security.conf
+Source3: modsecurity_localrules.conf
 Requires: httpd httpd-mmn = %{_httpd_mmn}
 BuildRequires: httpd-devel libxml2-devel pcre-devel curl-devel lua-devel
 
@@ -62,6 +63,7 @@ install -d %{buildroot}%{_bindir}
 install -d %{buildroot}%{_httpd_moddir}
 install -d %{buildroot}%{_sysconfdir}/httpd/modsecurity.d/
 install -d %{buildroot}%{_sysconfdir}/httpd/modsecurity.d/activated_rules
+install -d %{buildroot}%{_sysconfdir}/httpd/modsecurity.d/local_rules
 
 install -m0755 apache2/.libs/mod_security2.so %{buildroot}%{_httpd_moddir}/mod_security2.so
 
@@ -76,6 +78,9 @@ install -d -m0755 %{buildroot}%{_httpd_confdir}
 cat %{SOURCE2} %{SOURCE1} > %{buildroot}%{_httpd_confdir}/mod_security.conf
 %endif
 install -m 700 -d $RPM_BUILD_ROOT%{_localstatedir}/lib/%{name}
+
+# Local rules example
+install -Dp -m0644 %{SOURCE3} %{buildroot}%{_sysconfdir}/httpd/modsecurity.d/local_rules/
 
 # mlogc
 %if %with_mlogc
@@ -99,6 +104,8 @@ rm -rf %{buildroot}
 %endif
 %dir %{_sysconfdir}/httpd/modsecurity.d
 %dir %{_sysconfdir}/httpd/modsecurity.d/activated_rules
+%dir %{_sysconfdir}/httpd/modsecurity.d/local_rules
+%config(noreplace) %{_sysconfdir}/httpd/modsecurity.d/local_rules/*.conf
 %attr(770,apache,root) %dir %{_localstatedir}/lib/%{name}
 
 %if %with_mlogc
@@ -113,6 +120,9 @@ rm -rf %{buildroot}
 %endif
 
 %changelog
+* Fri Aug 15 2014 Athmane Madjoudj <athmane@fedoraproject.org> 2.8.0-4
+- Add support for user-provided configurations and rules (rhbz #1129843)
+
 * Sat Jun 07 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.8.0-2
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
 
