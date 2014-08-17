@@ -10,7 +10,7 @@
 Summary: Security module for the Apache HTTP Server
 Name: mod_security 
 Version: 2.8.0
-Release: 4%{?dist}
+Release: 5%{?dist}
 License: ASL 2.0
 URL: http://www.modsecurity.org/
 Group: System Environment/Daemons
@@ -120,6 +120,9 @@ rm -rf %{buildroot}
 %endif
 
 %changelog
+* Sun Aug 17 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.8.0-5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
+
 * Fri Aug 15 2014 Athmane Madjoudj <athmane@fedoraproject.org> 2.8.0-4
 - Add support for user-provided configurations and rules (rhbz #1129843)
 
