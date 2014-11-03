@@ -10,7 +10,7 @@
 Summary: Security module for the Apache HTTP Server
 Name: mod_security 
 Version: 2.8.0
-Release: 5%{?dist}
+Release: 6%{?dist}
 License: ASL 2.0
 URL: http://www.modsecurity.org/
 Group: System Environment/Daemons
@@ -18,6 +18,7 @@ Source: https://www.modsecurity.org/tarball/%{version}/modsecurity-%{version}.ta
 Source1: mod_security.conf
 Source2: 10-mod_security.conf
 Source3: modsecurity_localrules.conf
+Patch0: 0001-mlogc-Changes-the-default-SSL-algo-to-TLS-1.2.patch
 Requires: httpd httpd-mmn = %{_httpd_mmn}
 BuildRequires: httpd-devel libxml2-devel pcre-devel curl-devel lua-devel
 
@@ -38,6 +39,7 @@ This package contains the ModSecurity Audit Log Collector.
 
 %prep
 %setup -q -n modsecurity-%{version}
+%patch0 -p1
 
 %build
 %configure --enable-pcre-match-limit=1000000 \
@@ -120,6 +122,9 @@ rm -rf %{buildroot}
 %endif
 
 %changelog
+* Mon Nov 03 2014 Athmane Madjoudj <athmane@fedoraproject.org> 2.8.0-6
+- Changes the default SSL version to TLS 1.2 since SSLv3 is vulnerable to poodle
+
 * Sun Aug 17 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.8.0-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_21_22_Mass_Rebuild
 

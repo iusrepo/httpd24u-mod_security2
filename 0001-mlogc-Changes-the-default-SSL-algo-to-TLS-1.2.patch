@@ -1,0 +1,28 @@
+From 84f2299f6b3b56cf5342ad378c3641be548bf79c Mon Sep 17 00:00:00 2001
+From: Felipe Zimmerle <fcosta@trustwave.com>
+Date: Mon, 3 Nov 2014 10:13:21 -0800
+Subject: [PATCH] mlogc: Changes the default SSL algo to TLS 1.2
+
+As reported by Josh Amishav-Zlatin, mlogc was making usage of SSLv3 instead of
+TLS 1.2. Servers should not answer SSLv3 after poodle.
+---
+ mlogc/mlogc.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/mlogc/mlogc.c b/mlogc/mlogc.c
+index 4163230..c4b2a23 100644
+--- a/mlogc/mlogc.c
++++ b/mlogc/mlogc.c
+@@ -1218,8 +1218,8 @@ static void logc_init(void)
+         curl_easy_setopt(curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+         curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, FALSE);
+         curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 0);
+-        /* SSLv3 works better overall as some servers have issues with TLS */
+-        curl_easy_setopt(curl, CURLOPT_SSLVERSION, CURL_SSLVERSION_SSLv3);
++        curl_easy_setopt(curl, CURLOPT_SSLVERSION, CURL_SSLVERSION_TLSv1_2);
++
+         curl_easy_setopt(curl, CURLOPT_CONNECTTIMEOUT, 15);
+         curl_easy_setopt(curl, CURLOPT_NOSIGNAL, TRUE);
+         curl_easy_setopt(curl, CURLOPT_HEADER, TRUE);
+--
+1.9.1
