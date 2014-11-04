@@ -10,7 +10,7 @@
 Summary: Security module for the Apache HTTP Server
 Name: mod_security 
 Version: 2.8.0
-Release: 6%{?dist}
+Release: 7%{?dist}
 License: ASL 2.0
 URL: http://www.modsecurity.org/
 Group: System Environment/Daemons
@@ -20,7 +20,8 @@ Source2: 10-mod_security.conf
 Source3: modsecurity_localrules.conf
 Patch0: 0001-mlogc-Changes-the-default-SSL-algo-to-TLS-1.2.patch
 Requires: httpd httpd-mmn = %{_httpd_mmn}
-BuildRequires: httpd-devel libxml2-devel pcre-devel curl-devel lua-devel
+BuildRequires: httpd-devel libxml2-devel pcre-devel lua-devel
+BuildRequires: curl-devel >= 7.38.0
 
 %description
 ModSecurity is an open source intrusion detection and prevention engine
@@ -122,6 +123,9 @@ rm -rf %{buildroot}
 %endif
 
 %changelog
+* Tue Nov 04 2014 Athmane Madjoudj <athmane@fedoraproject.org> 2.8.0-7
+- Make sure mod_security is built with correct curl version
+
 * Mon Nov 03 2014 Athmane Madjoudj <athmane@fedoraproject.org> 2.8.0-6
 - Changes the default SSL version to TLS 1.2 since SSLv3 is vulnerable to poodle
 
