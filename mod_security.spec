@@ -9,8 +9,8 @@
 
 Summary: Security module for the Apache HTTP Server
 Name: mod_security 
-Version: 2.8.0
-Release: 7%{?dist}
+Version: 2.9.0
+Release: 1%{?dist}
 License: ASL 2.0
 URL: http://www.modsecurity.org/
 Group: System Environment/Daemons
@@ -18,9 +18,11 @@ Source: https://www.modsecurity.org/tarball/%{version}/modsecurity-%{version}.ta
 Source1: mod_security.conf
 Source2: 10-mod_security.conf
 Source3: modsecurity_localrules.conf
-Patch0: 0001-mlogc-Changes-the-default-SSL-algo-to-TLS-1.2.patch
+# Github PR #837
+Patch0: modsecurity-2.9.0-fix-lua53-build.patch
 Requires: httpd httpd-mmn = %{_httpd_mmn}
 BuildRequires: httpd-devel libxml2-devel pcre-devel lua-devel
+# Required for force recent TLS  version
 BuildRequires: curl-devel >= 7.38.0
 
 %description
@@ -123,6 +125,11 @@ rm -rf %{buildroot}
 %endif
 
 %changelog
+* Fri Feb 13 2015 Athmane Madjoudj <athmane@fedoraproject.org>  2.9.0-1
+- Update to 2.9.0
+- Remove backported patch
+- Add patch to fix lua 5.3 build issue (PR #837)
+
 * Tue Nov 04 2014 Athmane Madjoudj <athmane@fedoraproject.org> 2.8.0-7
 - Make sure mod_security is built with correct curl version
 
