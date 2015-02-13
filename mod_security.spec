@@ -10,7 +10,7 @@
 Summary: Security module for the Apache HTTP Server
 Name: mod_security 
 Version: 2.9.0
-Release: 1%{?dist}
+Release: 2%{?dist}
 License: ASL 2.0
 URL: http://www.modsecurity.org/
 Group: System Environment/Daemons
@@ -23,7 +23,7 @@ Patch0: modsecurity-2.9.0-fix-lua53-build.patch
 Requires: httpd httpd-mmn = %{_httpd_mmn}
 BuildRequires: httpd-devel libxml2-devel pcre-devel lua-devel
 # Required for force recent TLS  version
-BuildRequires: curl-devel >= 7.38.0
+BuildRequires: curl-devel
 
 %description
 ModSecurity is an open source intrusion detection and prevention engine
@@ -125,6 +125,9 @@ rm -rf %{buildroot}
 %endif
 
 %changelog
+* Fri Feb 13 2015 Athmane Madjoudj <athmane@fedoraproject.org> 2.9.0-2
+- Remove curl version dep. since it no longer required
+
 * Fri Feb 13 2015 Athmane Madjoudj <athmane@fedoraproject.org>  2.9.0-1
 - Update to 2.9.0
 - Remove backported patch
