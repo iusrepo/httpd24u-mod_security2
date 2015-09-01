@@ -10,7 +10,7 @@
 Summary: Security module for the Apache HTTP Server
 Name: mod_security 
 Version: 2.9.0
-Release: 3%{?dist}
+Release: 4%{?dist}
 License: ASL 2.0
 URL: http://www.modsecurity.org/
 Group: System Environment/Daemons
@@ -23,7 +23,7 @@ Patch0: modsecurity-2.9.0-fix-lua53-build.patch
 Requires: httpd httpd-mmn = %{_httpd_mmn}
 BuildRequires: httpd-devel libxml2-devel pcre-devel lua-devel
 # Required for force recent TLS  version
-BuildRequires: curl-devel
+BuildRequires: curl-devel yajl-devel
 
 %description
 ModSecurity is an open source intrusion detection and prevention engine
@@ -47,7 +47,8 @@ This package contains the ModSecurity Audit Log Collector.
 %build
 %configure --enable-pcre-match-limit=1000000 \
            --enable-pcre-match-limit-recursion=1000000 \
-           --with-apxs=%{_httpd_apxs}
+           --with-apxs=%{_httpd_apxs} \
+           --with-yajl
 # remove rpath
 sed -i 's|^hardcode_libdir_flag_spec=.*|hardcode_libdir_flag_spec=""|g' libtool
 sed -i 's|^runpath_var=LD_RUN_PATH|runpath_var=DIE_RPATH_DIE|g' libtool
@@ -125,6 +126,9 @@ rm -rf %{buildroot}
 %endif
 
 %changelog
+* Tue Sep 01 2015 Athmane Madjoudj <athmane@fedoraproject.org>  2.9.0-4
+- Add yajl support
+
 * Wed Jun 17 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 2.9.0-3
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
 
