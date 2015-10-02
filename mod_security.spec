@@ -10,7 +10,7 @@
 Summary: Security module for the Apache HTTP Server
 Name: mod_security 
 Version: 2.9.0
-Release: 4%{?dist}
+Release: 5%{?dist}
 License: ASL 2.0
 URL: http://www.modsecurity.org/
 Group: System Environment/Daemons
@@ -21,9 +21,11 @@ Source3: modsecurity_localrules.conf
 # Github PR #837
 Patch0: modsecurity-2.9.0-fix-lua53-build.patch
 Requires: httpd httpd-mmn = %{_httpd_mmn}
-BuildRequires: httpd-devel libxml2-devel pcre-devel lua-devel
+#BuildRequires: httpd-devel libxml2-devel pcre-devel lua-devel
 # Required for force recent TLS  version
-BuildRequires: curl-devel yajl-devel
+#BuildRequires: curl-devel yajl-devel
+BuildRequires: httpd-devel
+BuildRequires: pkgconfig(libxml-2.0) pkgconfig(lua) pkgconfig(yajl) pkgconfig(libpcre) pkgconfig(libcurl)
 
 %description
 ModSecurity is an open source intrusion detection and prevention engine
@@ -126,6 +128,9 @@ rm -rf %{buildroot}
 %endif
 
 %changelog
+* Fri Oct 02 2015 Athmane Madjoudj <athmane@fedoraproject.org> 2.9.0-5
+- Update BuildRequires using pkgconfig name schema
+
 * Tue Sep 01 2015 Athmane Madjoudj <athmane@fedoraproject.org>  2.9.0-4
 - Add yajl support
 
