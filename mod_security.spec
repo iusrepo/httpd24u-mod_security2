@@ -9,8 +9,8 @@
 
 Summary: Security module for the Apache HTTP Server
 Name: mod_security 
-Version: 2.9.0
-Release: 6%{?dist}
+Version: 2.9.1
+Release: 0.rc1%{?dist}
 License: ASL 2.0
 URL: http://www.modsecurity.org/
 Group: System Environment/Daemons
@@ -18,8 +18,6 @@ Source: https://www.modsecurity.org/tarball/%{version}/modsecurity-%{version}.ta
 Source1: mod_security.conf
 Source2: 10-mod_security.conf
 Source3: modsecurity_localrules.conf
-# Github PR #837
-Patch0: modsecurity-2.9.0-fix-lua53-build.patch
 Requires: httpd httpd-mmn = %{_httpd_mmn}
 #BuildRequires: httpd-devel libxml2-devel pcre-devel lua-devel
 # Required for force recent TLS  version
@@ -44,7 +42,6 @@ This package contains the ModSecurity Audit Log Collector.
 
 %prep
 %setup -q -n modsecurity-%{version}
-%patch0 -p1
 
 %build
 %configure --enable-pcre-match-limit=1000000 \
@@ -128,6 +125,10 @@ rm -rf %{buildroot}
 %endif
 
 %changelog
+* Tue Mar 08 2016 Athmane Madjoudj <athmane@fedoraproject.org> 2.9.1-0.rc1
+- Update to 2.9.1-rc1
+- Remove upstreamed patch
+
 * Thu Feb 04 2016 Fedora Release Engineering <releng@fedoraproject.org> - 2.9.0-6
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_24_Mass_Rebuild
 
