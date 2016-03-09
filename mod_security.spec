@@ -10,11 +10,11 @@
 Summary: Security module for the Apache HTTP Server
 Name: mod_security 
 Version: 2.9.1
-Release: 0.1.rc1%{?dist}
+Release: 1%{?dist}
 License: ASL 2.0
 URL: http://www.modsecurity.org/
 Group: System Environment/Daemons
-Source: https://www.modsecurity.org/tarball/%{version}/modsecurity-%{version}.tar.gz
+Source: https://github.com/SpiderLabs/ModSecurity/releases/download/v%{version}/modsecurity-%{version}.tar.gz
 Source1: mod_security.conf
 Source2: 10-mod_security.conf
 Source3: modsecurity_localrules.conf
@@ -69,8 +69,6 @@ make %{_smp_mflags}
 #make test-regression
 
 %install
-rm -rf %{buildroot}
-
 install -d %{buildroot}%{_sbindir}
 install -d %{buildroot}%{_bindir}
 install -d %{buildroot}%{_httpd_moddir}
@@ -104,11 +102,8 @@ install -m0755 mlogc/mlogc-batch-load.pl %{buildroot}%{_bindir}/mlogc-batch-load
 install -m0644 mlogc/mlogc-default.conf %{buildroot}%{_sysconfdir}/mlogc.conf
 %endif
 
-%clean
-rm -rf %{buildroot}
 
 %files
-%defattr (-,root,root)
 %doc CHANGES LICENSE README.TXT NOTICE
 %{_httpd_moddir}/mod_security2.so
 %config(noreplace) %{_httpd_confdir}/*.conf
@@ -123,7 +118,6 @@ rm -rf %{buildroot}
 
 %if %with_mlogc
 %files -n mlogc
-%defattr (-,root,root)
 %doc mlogc/INSTALL
 %attr(0640,root,apache) %config(noreplace) %{_sysconfdir}/mlogc.conf
 %attr(0755,root,root) %dir %{_localstatedir}/log/mlogc
@@ -133,7 +127,11 @@ rm -rf %{buildroot}
 %endif
 
 %changelog
-* Tue Mar 08 2016 Athmane Madjoudj <athmane@fedoraproject.org> 2.9.1-1.rc1
+* Wed Mar 09 2016 Athmane Madjoudj <athmane@fedoraproject.org> 2.9.1-1
+- Update to final 2.9.1
+- Minor spec fix.
+
+* Tue Mar 08 2016 Athmane Madjoudj <athmane@fedoraproject.org> 2.9.1-0.1.rc1
 - Add workaround for el6
 
 * Tue Mar 08 2016 Athmane Madjoudj <athmane@fedoraproject.org> 2.9.1-0.rc1
