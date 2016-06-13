@@ -1,3 +1,4 @@
+# IUS spec file for httpd24u-mod_security2, forked Fedora:
 %{!?_httpd_apxs: %{expand: %%global _httpd_apxs %%{_sbindir}/apxs}}
 %{!?_httpd_mmn: %{expand: %%global _httpd_mmn %%(cat %{_includedir}/httpd/.mmn || echo 0-0)}}
 # /etc/httpd/conf.d with httpd < 2.4 and defined as /etc/httpd/conf.modules.d with httpd >= 2.4
@@ -7,10 +8,13 @@
 
 %global with_mlogc 0%{?fedora} || 0%{?rhel} <= 6
 
+%global pkg_name httpd24u-mod_security
+%global ius_suffix 2
+
 Summary: Security module for the Apache HTTP Server
-Name: mod_security 
+Name: %{pkg_name}%{?ius_suffix}
 Version: 2.9.1
-Release: 1%{?dist}
+Release: 1.ius%{?dist}
 License: ASL 2.0
 URL: http://www.modsecurity.org/
 Group: System Environment/Daemons
@@ -18,20 +22,27 @@ Source: https://github.com/SpiderLabs/ModSecurity/releases/download/v%{version}/
 Source1: mod_security.conf
 Source2: 10-mod_security.conf
 Source3: modsecurity_localrules.conf
-Requires: httpd httpd-mmn = %{_httpd_mmn}
+Requires: httpd24u httpd24u-mmn = %{_httpd_mmn}
 #BuildRequires: httpd-devel libxml2-devel pcre-devel lua-devel
 # Required for force recent TLS  version
 #BuildRequires: curl-devel yajl-devel
-BuildRequires: httpd-devel
+# make sure to pull in stock httpd and not httpd24u
+BuildRequires: httpd24u-devel
 BuildRequires: pkgconfig(libxml-2.0) pkgconfig(lua) pkgconfig(libpcre) pkgconfig(libcurl)
 
 # Workarround for EL6
 %if 0%{?el6}
 BuildRequires: yajl-devel
 %else
-BuildRequires: pkgconfig(yajl)  
+BuildRequires: pkgconfig(yajl)
 %endif
 
+
+# IUS specific
+Provides: %{pkg_name} = %{version}-%{release}
+Provides: %{pkg_name}%{?_isa} = %{version}-%{release}
+Provides: config(%{pkg_name}) = %{version}-%{release}
+Conflicts: %{pkg_name} < %{version}-%{release}
 
 %description
 ModSecurity is an open source intrusion detection and prevention engine
@@ -55,7 +66,9 @@ This package contains the ModSecurity Audit Log Collector.
 %configure --enable-pcre-match-limit=1000000 \
            --enable-pcre-match-limit-recursion=1000000 \
            --with-apxs=%{_httpd_apxs} \
-           --with-yajl
+           --with-yaj \
+           --with-apu=/usr/bin/apr15u-1-config \
+           --with-apr=/usr/bin/apr15u-1-config
 # remove rpath
 sed -i 's|^hardcode_libdir_flag_spec=.*|hardcode_libdir_flag_spec=""|g' libtool
 sed -i 's|^runpath_var=LD_RUN_PATH|runpath_var=DIE_RPATH_DIE|g' libtool
@@ -127,6 +140,9 @@ install -m0644 mlogc/mlogc-default.conf %{buildroot}%{_sysconfdir}/mlogc.conf
 %endif
 
 %changelog
+* Thu Apr 28 2016 Ben Harper <ben.harper@rackspace.com> - 2.9.1-1.ius
+- initial port from Fedora
+
 * Wed Mar 09 2016 Athmane Madjoudj <athmane@fedoraproject.org> 2.9.1-1
 - Update to final 2.9.1
 - Minor spec fix.
