@@ -2,25 +2,21 @@
 
 %global with_mlogc 0%{?fedora} || 0%{?rhel} <= 6
 
-%global pkg_name httpd24u-mod_security
-%global ius_suffix 2
+%global httpd httpd24u
+%global module mod_security2
 
 Summary: Security module for the Apache HTTP Server
-Name: %{pkg_name}%{?ius_suffix}
+Name: %{httpd}-%{module}
 Version: 2.9.1
 Release: 1.ius%{?dist}
 License: ASL 2.0
 URL: http://www.modsecurity.org/
 Group: System Environment/Daemons
 Source: https://github.com/SpiderLabs/ModSecurity/releases/download/v%{version}/modsecurity-%{version}.tar.gz
-Source1: mod_security.conf
-Source2: 10-mod_security.conf
+Source1: %{module}.conf
+Source2: 10-%{module}.conf
 Source3: modsecurity_localrules.conf
-Requires: httpd24u, httpd-mmn = %{_httpd_mmn}
-#BuildRequires: httpd-devel libxml2-devel pcre-devel lua-devel
-# Required for force recent TLS  version
-#BuildRequires: curl-devel yajl-devel
-# make sure to pull in stock httpd and not httpd24u
+Requires: %{httpd}, httpd-mmn = %{_httpd_mmn}
 BuildRequires: httpd24u-devel
 BuildRequires: pkgconfig(libxml-2.0) pkgconfig(lua) pkgconfig(libpcre) pkgconfig(libcurl)
 
@@ -38,10 +34,10 @@ BuildRequires: pkgconfig(yajl)
 %global __provides_exclude_from %{?__provides_exclude_from:%__provides_exclude_from|}%{_httpd_moddir}/.*\\.so$
 
 # IUS specific
-Provides: %{pkg_name} = %{version}-%{release}
-Provides: %{pkg_name}%{?_isa} = %{version}-%{release}
-Provides: config(%{pkg_name}) = %{version}-%{release}
-Conflicts: %{pkg_name} < %{version}-%{release}
+Provides: %{module} = %{version}-%{release}
+Provides: %{module}%{?_isa} = %{version}-%{release}
+Conflicts: %{module} < %{version}-%{release}
+
 
 %description
 ModSecurity is an open source intrusion detection and prevention engine
@@ -88,12 +84,12 @@ install -d %{buildroot}%{_sysconfdir}/httpd/modsecurity.d/
 install -d %{buildroot}%{_sysconfdir}/httpd/modsecurity.d/activated_rules
 install -d %{buildroot}%{_sysconfdir}/httpd/modsecurity.d/local_rules
 
-install -m0755 apache2/.libs/mod_security2.so %{buildroot}%{_httpd_moddir}/mod_security2.so
+install -m0755 apache2/.libs/%{module}.so %{buildroot}%{_httpd_moddir}/%{module}.so
 
-install -Dp -m0644 %{SOURCE2} %{buildroot}%{_httpd_modconfdir}/10-mod_security.conf
-install -Dp -m0644 %{SOURCE1} %{buildroot}%{_httpd_confdir}/mod_security.conf
-sed  -i 's/Include/IncludeOptional/'  %{buildroot}%{_httpd_confdir}/mod_security.conf
-install -m 700 -d $RPM_BUILD_ROOT%{_localstatedir}/lib/%{name}
+install -Dp -m0644 %{SOURCE2} %{buildroot}%{_httpd_modconfdir}/10-%{module}.conf
+install -Dp -m0644 %{SOURCE1} %{buildroot}%{_httpd_confdir}/%{module}.conf
+sed  -i 's/Include/IncludeOptional/'  %{buildroot}%{_httpd_confdir}/%{module}.conf
+install -m 700 -d $RPM_BUILD_ROOT%{_localstatedir}/lib/%{module}
 
 # Local rules example
 install -Dp -m0644 %{SOURCE3} %{buildroot}%{_sysconfdir}/httpd/modsecurity.d/local_rules/
@@ -112,14 +108,14 @@ install -m0644 mlogc/mlogc-default.conf %{buildroot}%{_sysconfdir}/mlogc.conf
 %{!?_licensedir:%global license %%doc}
 %license LICENSE
 %doc CHANGES README.TXT NOTICE
-%{_httpd_moddir}/mod_security2.so
+%{_httpd_moddir}/%{module}.so
 %config(noreplace) %{_httpd_confdir}/*.conf
 %config(noreplace) %{_httpd_modconfdir}/*.conf
 %dir %{_sysconfdir}/httpd/modsecurity.d
 %dir %{_sysconfdir}/httpd/modsecurity.d/activated_rules
 %dir %{_sysconfdir}/httpd/modsecurity.d/local_rules
 %config(noreplace) %{_sysconfdir}/httpd/modsecurity.d/local_rules/*.conf
-%attr(770,apache,root) %dir %{_localstatedir}/lib/%{name}
+%attr(770,apache,root) %dir %{_localstatedir}/lib/%{module}
 
 %if %with_mlogc
 %files mlogc
@@ -138,6 +134,7 @@ install -m0644 mlogc/mlogc-default.conf %{buildroot}%{_sysconfdir}/mlogc.conf
 - Filter auto-provides
 - Use %%license when possible
 - Rename mlogc subpackage to httpd24u-mod_security-mlogc to avoid overriding base/EPEL
+- Use mod_security2 name for config files and directories
 
 * Wed Mar 09 2016 Athmane Madjoudj <athmane@fedoraproject.org> 2.9.1-1
 - Update to final 2.9.1
