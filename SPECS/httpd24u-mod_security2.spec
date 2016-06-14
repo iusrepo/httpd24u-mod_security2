@@ -109,7 +109,9 @@ install -m0644 mlogc/mlogc-default.conf %{buildroot}%{_sysconfdir}/mlogc.conf
 
 
 %files
-%doc CHANGES LICENSE README.TXT NOTICE
+%{!?_licensedir:%global license %%doc}
+%license LICENSE
+%doc CHANGES README.TXT NOTICE
 %{_httpd_moddir}/mod_security2.so
 %config(noreplace) %{_httpd_confdir}/*.conf
 %config(noreplace) %{_httpd_modconfdir}/*.conf
@@ -134,6 +136,7 @@ install -m0644 mlogc/mlogc-default.conf %{buildroot}%{_sysconfdir}/mlogc.conf
 - initial port from Fedora
 - Drop httpd 2.2 compatibility stuff
 - Filter auto-provides
+- Use %%license when possible
 
 * Wed Mar 09 2016 Athmane Madjoudj <athmane@fedoraproject.org> 2.9.1-1
 - Update to final 2.9.1
