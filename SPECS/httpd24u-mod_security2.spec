@@ -49,12 +49,12 @@ for web applications. It operates embedded into the web server, acting
 as a powerful umbrella - shielding web applications from attacks.
 
 %if %with_mlogc
-%package -n     mlogc
+%package mlogc
 Summary:        ModSecurity Audit Log Collector
 Group:          System Environment/Daemons
-Requires:       mod_security
+Requires:       %{name}
 
-%description -n mlogc
+%description mlogc
 This package contains the ModSecurity Audit Log Collector.
 %endif
 
@@ -122,7 +122,7 @@ install -m0644 mlogc/mlogc-default.conf %{buildroot}%{_sysconfdir}/mlogc.conf
 %attr(770,apache,root) %dir %{_localstatedir}/lib/%{name}
 
 %if %with_mlogc
-%files -n mlogc
+%files mlogc
 %doc mlogc/INSTALL
 %attr(0640,root,apache) %config(noreplace) %{_sysconfdir}/mlogc.conf
 %attr(0755,root,root) %dir %{_localstatedir}/log/mlogc
@@ -137,6 +137,7 @@ install -m0644 mlogc/mlogc-default.conf %{buildroot}%{_sysconfdir}/mlogc.conf
 - Drop httpd 2.2 compatibility stuff
 - Filter auto-provides
 - Use %%license when possible
+- Rename mlogc subpackage to httpd24u-mod_security-mlogc to avoid overriding base/EPEL
 
 * Wed Mar 09 2016 Athmane Madjoudj <athmane@fedoraproject.org> 2.9.1-1
 - Update to final 2.9.1
