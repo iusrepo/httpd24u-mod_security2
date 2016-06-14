@@ -1,10 +1,4 @@
 # IUS spec file for httpd24u-mod_security2, forked Fedora:
-%{!?_httpd_apxs: %{expand: %%global _httpd_apxs %%{_sbindir}/apxs}}
-%{!?_httpd_mmn: %{expand: %%global _httpd_mmn %%(cat %{_includedir}/httpd/.mmn || echo 0-0)}}
-# /etc/httpd/conf.d with httpd < 2.4 and defined as /etc/httpd/conf.modules.d with httpd >= 2.4
-%{!?_httpd_modconfdir: %{expand: %%global _httpd_modconfdir %%{_sysconfdir}/httpd/conf.d}}
-%{!?_httpd_confdir:    %{expand: %%global _httpd_confdir    %%{_sysconfdir}/httpd/conf.d}}
-%{!?_httpd_moddir:    %{expand: %%global _httpd_moddir    %%{_libdir}/httpd/modules}}
 
 %global with_mlogc 0%{?fedora} || 0%{?rhel} <= 6
 
@@ -91,16 +85,9 @@ install -d %{buildroot}%{_sysconfdir}/httpd/modsecurity.d/local_rules
 
 install -m0755 apache2/.libs/mod_security2.so %{buildroot}%{_httpd_moddir}/mod_security2.so
 
-%if "%{_httpd_modconfdir}" != "%{_httpd_confdir}"
-# 2.4-style
 install -Dp -m0644 %{SOURCE2} %{buildroot}%{_httpd_modconfdir}/10-mod_security.conf
 install -Dp -m0644 %{SOURCE1} %{buildroot}%{_httpd_confdir}/mod_security.conf
 sed  -i 's/Include/IncludeOptional/'  %{buildroot}%{_httpd_confdir}/mod_security.conf
-%else
-# 2.2-style
-install -d -m0755 %{buildroot}%{_httpd_confdir}
-cat %{SOURCE2} %{SOURCE1} > %{buildroot}%{_httpd_confdir}/mod_security.conf
-%endif
 install -m 700 -d $RPM_BUILD_ROOT%{_localstatedir}/lib/%{name}
 
 # Local rules example
@@ -120,9 +107,7 @@ install -m0644 mlogc/mlogc-default.conf %{buildroot}%{_sysconfdir}/mlogc.conf
 %doc CHANGES LICENSE README.TXT NOTICE
 %{_httpd_moddir}/mod_security2.so
 %config(noreplace) %{_httpd_confdir}/*.conf
-%if "%{_httpd_modconfdir}" != "%{_httpd_confdir}"
 %config(noreplace) %{_httpd_modconfdir}/*.conf
-%endif
 %dir %{_sysconfdir}/httpd/modsecurity.d
 %dir %{_sysconfdir}/httpd/modsecurity.d/activated_rules
 %dir %{_sysconfdir}/httpd/modsecurity.d/local_rules
@@ -142,6 +127,7 @@ install -m0644 mlogc/mlogc-default.conf %{buildroot}%{_sysconfdir}/mlogc.conf
 %changelog
 * Thu Apr 28 2016 Ben Harper <ben.harper@rackspace.com> - 2.9.1-1.ius
 - initial port from Fedora
+- Drop httpd 2.2 compatibility stuff
 
 * Wed Mar 09 2016 Athmane Madjoudj <athmane@fedoraproject.org> 2.9.1-1
 - Update to final 2.9.1
