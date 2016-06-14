@@ -65,8 +65,8 @@ This package contains the ModSecurity Audit Log Collector.
 %configure --enable-pcre-match-limit=1000000 \
            --enable-pcre-match-limit-recursion=1000000 \
            --with-apxs=%{_httpd_apxs} \
-           --with-yaj \
-           --with-apu=/usr/bin/apr15u-1-config \
+           --with-yajl \
+           --with-apu=/usr/bin/apu15u-1-config \
            --with-apr=/usr/bin/apr15u-1-config
 # remove rpath
 sed -i 's|^hardcode_libdir_flag_spec=.*|hardcode_libdir_flag_spec=""|g' libtool
