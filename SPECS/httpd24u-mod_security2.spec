@@ -16,7 +16,7 @@ Source: https://github.com/SpiderLabs/ModSecurity/releases/download/v%{version}/
 Source1: mod_security.conf
 Source2: 10-mod_security.conf
 Source3: modsecurity_localrules.conf
-Requires: httpd24u httpd24u-mmn = %{_httpd_mmn}
+Requires: httpd24u, httpd-mmn = %{_httpd_mmn}
 #BuildRequires: httpd-devel libxml2-devel pcre-devel lua-devel
 # Required for force recent TLS  version
 #BuildRequires: curl-devel yajl-devel
