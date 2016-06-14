@@ -31,6 +31,11 @@ BuildRequires: yajl-devel
 BuildRequires: pkgconfig(yajl)
 %endif
 
+# RPM 4.8
+%{?filter_provides_in: %filter_provides_in %{_httpd_moddir}/.*\.so$}
+%{?filter_setup}
+# RPM 4.9
+%global __provides_exclude_from %{?__provides_exclude_from:%__provides_exclude_from|}%{_httpd_moddir}/.*\\.so$
 
 # IUS specific
 Provides: %{pkg_name} = %{version}-%{release}
@@ -128,6 +133,7 @@ install -m0644 mlogc/mlogc-default.conf %{buildroot}%{_sysconfdir}/mlogc.conf
 * Thu Apr 28 2016 Ben Harper <ben.harper@rackspace.com> - 2.9.1-1.ius
 - initial port from Fedora
 - Drop httpd 2.2 compatibility stuff
+- Filter auto-provides
 
 * Wed Mar 09 2016 Athmane Madjoudj <athmane@fedoraproject.org> 2.9.1-1
 - Update to final 2.9.1
