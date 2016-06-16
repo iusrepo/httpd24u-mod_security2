@@ -128,7 +128,7 @@ install -m0644 mlogc/mlogc-default.conf %{buildroot}%{_sysconfdir}/mlogc.conf
 %endif
 
 %changelog
-* Thu Apr 28 2016 Ben Harper <ben.harper@rackspace.com> - 2.9.1-1.ius
+* Thu Jun 16 2016 Ben Harper <ben.harper@rackspace.com> - 2.9.1-1.ius
 - initial port from Fedora
 - Drop httpd 2.2 compatibility stuff
 - Filter auto-provides
