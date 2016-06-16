@@ -1,9 +1,9 @@
 # IUS spec file for httpd24u-mod_security2, forked Fedora:
 
-%global with_mlogc 0%{?fedora} || 0%{?rhel} <= 6
-
 %global httpd httpd24u
 %global module mod_security2
+
+%bcond_without mlogc
 
 Summary: Security module for the Apache HTTP Server
 Name: %{httpd}-%{module}
@@ -42,7 +42,7 @@ ModSecurity is an open source intrusion detection and prevention engine
 for web applications. It operates embedded into the web server, acting
 as a powerful umbrella - shielding web applications from attacks.
 
-%if %with_mlogc
+%if %{with mlogc}
 %package mlogc
 Summary:        ModSecurity Audit Log Collector
 Group:          System Environment/Daemons
@@ -93,7 +93,7 @@ install -m 700 -d $RPM_BUILD_ROOT%{_localstatedir}/lib/%{module}
 install -Dp -m0644 %{SOURCE3} %{buildroot}%{_sysconfdir}/httpd/modsecurity.d/local_rules/
 
 # mlogc
-%if %with_mlogc
+%if %{with mlogc}
 install -d %{buildroot}%{_localstatedir}/log/mlogc
 install -d %{buildroot}%{_localstatedir}/log/mlogc/data
 install -m0755 mlogc/mlogc %{buildroot}%{_bindir}/mlogc
@@ -115,7 +115,7 @@ install -m0644 mlogc/mlogc-default.conf %{buildroot}%{_sysconfdir}/mlogc.conf
 %config(noreplace) %{_sysconfdir}/httpd/modsecurity.d/local_rules/*.conf
 %attr(770,apache,root) %dir %{_localstatedir}/lib/%{module}
 
-%if %with_mlogc
+%if %{with mlogc}
 %files mlogc
 %doc mlogc/INSTALL
 %attr(0640,root,apache) %config(noreplace) %{_sysconfdir}/mlogc.conf
@@ -132,6 +132,7 @@ install -m0644 mlogc/mlogc-default.conf %{buildroot}%{_sysconfdir}/mlogc.conf
 - Filter auto-provides
 - Use %%license when possible
 - Rename mlogc subpackage to httpd24u-mod_security-mlogc to avoid overriding base/EPEL
+- Enable mlogc everywhere
 - Use mod_security2 name for config files and directories
 
 * Wed Mar 09 2016 Athmane Madjoudj <athmane@fedoraproject.org> 2.9.1-1
