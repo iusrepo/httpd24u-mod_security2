@@ -30,8 +30,6 @@ BuildRequires: pkgconfig(yajl)
 # RPM 4.8
 %{?filter_provides_in: %filter_provides_in %{_httpd_moddir}/.*\.so$}
 %{?filter_setup}
-# RPM 4.9
-%global __provides_exclude_from %{?__provides_exclude_from:%__provides_exclude_from|}%{_httpd_moddir}/.*\\.so$
 
 # IUS specific
 Provides: %{module} = %{version}-%{release}
