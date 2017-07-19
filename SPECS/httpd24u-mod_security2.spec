@@ -7,7 +7,7 @@
 
 Summary: Security module for the Apache HTTP Server
 Name: %{httpd}-%{module}
-Version: 2.9.1
+Version: 2.9.2
 Release: 1.ius%{?dist}
 License: ASL 2.0
 URL: http://www.modsecurity.org/
@@ -126,6 +126,9 @@ install -m0644 mlogc/mlogc-default.conf %{buildroot}%{_sysconfdir}/mlogc.conf
 %endif
 
 %changelog
+* Wed Jul 19 2017 Ben Harper <ben.harper@rackspace.com> - 2.9.2-1.ius
+- Latest upstream
+
 * Thu Jun 16 2016 Ben Harper <ben.harper@rackspace.com> - 2.9.1-1.ius
 - initial port from Fedora
 - Drop httpd 2.2 compatibility stuff
