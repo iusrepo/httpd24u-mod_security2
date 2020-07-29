@@ -8,10 +8,9 @@
 Summary: Security module for the Apache HTTP Server
 Name: %{httpd}-%{module}
 Version: 2.9.2
-Release: 1.ius%{?dist}
+Release: 1%{?dist}
 License: ASL 2.0
 URL: http://www.modsecurity.org/
-Group: System Environment/Daemons
 Source: https://github.com/SpiderLabs/ModSecurity/releases/download/v%{version}/modsecurity-%{version}.tar.gz
 Source1: %{module}.conf
 Source2: 10-%{module}.conf
@@ -45,7 +44,6 @@ as a powerful umbrella - shielding web applications from attacks.
 %if %{with mlogc}
 %package mlogc
 Summary:        ModSecurity Audit Log Collector
-Group:          System Environment/Daemons
 Requires:       %{name}
 
 %description mlogc
@@ -103,7 +101,6 @@ install -m0644 mlogc/mlogc-default.conf %{buildroot}%{_sysconfdir}/mlogc.conf
 
 
 %files
-%{!?_licensedir:%global license %%doc}
 %license LICENSE
 %doc CHANGES README.TXT NOTICE
 %{_httpd_moddir}/%{module}.so
