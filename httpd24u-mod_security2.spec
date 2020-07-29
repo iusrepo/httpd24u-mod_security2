@@ -7,7 +7,7 @@
 
 Summary: Security module for the Apache HTTP Server
 Name: %{httpd}-%{module}
-Version: 2.9.2
+Version: 2.9.3
 Release: 1%{?dist}
 License: ASL 2.0
 URL: http://www.modsecurity.org/
@@ -15,9 +15,15 @@ Source: https://github.com/SpiderLabs/ModSecurity/releases/download/v%{version}/
 Source1: %{module}.conf
 Source2: 10-%{module}.conf
 Source3: modsecurity_localrules.conf
-Requires: %{httpd}, httpd-mmn = %{_httpd_mmn}
+Requires: %{httpd} httpd-mmn = %{_httpd_mmn}
+
+BuildRequires: gcc
 BuildRequires: httpd24u-devel
-BuildRequires: pkgconfig(libxml-2.0) pkgconfig(lua) pkgconfig(libpcre) pkgconfig(libcurl)
+BuildRequires: make
+BuildRequires: pkgconfig(libcurl)
+BuildRequires: pkgconfig(libpcre)
+BuildRequires: pkgconfig(libxml-2.0)
+BuildRequires: pkgconfig(lua)
 
 # Workarround for EL6
 %if 0%{?el6}
@@ -102,7 +108,7 @@ install -m0644 mlogc/mlogc-default.conf %{buildroot}%{_sysconfdir}/mlogc.conf
 
 %files
 %license LICENSE
-%doc CHANGES README.TXT NOTICE
+%doc CHANGES README.md NOTICE
 %{_httpd_moddir}/%{module}.so
 %config(noreplace) %{_httpd_confdir}/*.conf
 %config(noreplace) %{_httpd_modconfdir}/*.conf
@@ -123,6 +129,9 @@ install -m0644 mlogc/mlogc-default.conf %{buildroot}%{_sysconfdir}/mlogc.conf
 %endif
 
 %changelog
+* Wed Jul 29 2020 Carl George <carl@george.computer> - 2.9.3-1
+- Latest upstream
+
 * Wed Jul 19 2017 Ben Harper <ben.harper@rackspace.com> - 2.9.2-1.ius
 - Latest upstream
 
