@@ -8,18 +8,19 @@
 Summary: Security module for the Apache HTTP Server
 Name: %{httpd}-%{module}
 Version: 2.9.3
-Release: 1%{?dist}
+Release: 2%{?dist}
 License: ASL 2.0
 URL: http://www.modsecurity.org/
 Source: https://github.com/SpiderLabs/ModSecurity/releases/download/v%{version}/modsecurity-%{version}.tar.gz
 Source1: %{module}.conf
 Source2: 10-%{module}.conf
 Source3: modsecurity_localrules.conf
+Patch1: modsecurity-2.9.3-apulibs.patch
+
 Requires: %{httpd} httpd-mmn = %{_httpd_mmn}
 
-BuildRequires: gcc
+BuildRequires: gcc, make, autoconf, automake, libtool
 BuildRequires: httpd24u-devel
-BuildRequires: make
 BuildRequires: pkgconfig(libcurl)
 BuildRequires: pkgconfig(libpcre)
 BuildRequires: pkgconfig(libxml-2.0)
@@ -60,12 +61,15 @@ This package contains the ModSecurity Audit Log Collector.
 %setup -q -n modsecurity-%{version}
 
 %build
+./autogen.sh
 %configure --enable-pcre-match-limit=1000000 \
            --enable-pcre-match-limit-recursion=1000000 \
            --with-apxs=%{_httpd_apxs} \
-           --with-yajl \
            --with-apu=/usr/bin/apu15u-1-config \
-           --with-apr=/usr/bin/apr15u-1-config
+           --with-apr=/usr/bin/apr15u-1-config \
+           --with-yajl \
+           --disable-static
+
 # remove rpath
 sed -i 's|^hardcode_libdir_flag_spec=.*|hardcode_libdir_flag_spec=""|g' libtool
 sed -i 's|^runpath_var=LD_RUN_PATH|runpath_var=DIE_RPATH_DIE|g' libtool
@@ -129,6 +133,9 @@ install -m0644 mlogc/mlogc-default.conf %{buildroot}%{_sysconfdir}/mlogc.conf
 %endif
 
 %changelog
+* Fri Jan 22 2021 Joe Orton <jorton@redhat.com> - 2.9.3-2
+- don't link against redundant apr-util dependent libraries
+
 * Wed Jul 29 2020 Carl George <carl@george.computer> - 2.9.3-1
 - Latest upstream
 
