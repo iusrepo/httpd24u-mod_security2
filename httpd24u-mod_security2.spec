@@ -7,8 +7,8 @@
 
 Summary: Security module for the Apache HTTP Server
 Name: %{httpd}-%{module}
-Version: 2.9.3
-Release: 2%{?dist}
+Version: 2.9.7
+Release: 1%{?dist}
 License: ASL 2.0
 URL: http://www.modsecurity.org/
 Source: https://github.com/SpiderLabs/ModSecurity/releases/download/v%{version}/modsecurity-%{version}.tar.gz
@@ -133,6 +133,9 @@ install -m0644 mlogc/mlogc-default.conf %{buildroot}%{_sysconfdir}/mlogc.conf
 %endif
 
 %changelog
+* Thu Apr 13 2023 Luboš Uhliarik <luhliari@redhat.com> - 2.9.7-1
+- new version 2.9.7
+
 * Fri Jan 22 2021 Joe Orton <jorton@redhat.com> - 2.9.3-2
 - don't link against redundant apr-util dependent libraries
 
