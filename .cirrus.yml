@@ -1,9 +1,7 @@
 task:
   only_if: $CIRRUS_TAG == ''
   env:
-    matrix:
-      - RELEASEVER: 6
-      - RELEASEVER: 7
+    RELEASEVER: 7
   name: el$RELEASEVER
   container:
     image: centos:$RELEASEVER
